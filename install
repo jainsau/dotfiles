@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+# Download and install nix if not present already
+! [[ $(command -v nix-env) ]] && curl -L https://nixos.org/nix/install | sh
+
+# Global variables
+SHELL=zsh
+TERM=kitty
+
+# Source nix
+# NB: kitty install isn't working on macOS Monterrey (TBI)
+install_list=(nixpkgs.{$SHELL,antibody,tmux,asdf,wget,neovim,stow,clang,git,ripgrep,minikube,nodejs})
+nix-env -iA $install_list
+
+# Install and setup direnv to work with asdf
+asdf plugin-add direnv
+asdf install direnv latest
+asdf global direnv latest
+
+# Install and setup Poetry with asdf
+asdf plugin-add poetry
+asdf install poetry latest
+asdf global poetry latest
+
+# Stow dotfiles
+stow -t ~/ {$TERM,$SHELL,nvim,direnv,tmux,git}
+
+# Add zsh as a login shell
+! [[ $(grep -q $SHELL /etc/shells) ]] && command -v $SHELL | sudo tee -a /etc/shells
+
+# bundle zsh plugins 
+antibody bundle < ~/.zsh_plugins.txt
+
+# Install Nerd fonts
+# mkdir -p ~/.local/share/fonts
+# cd ~/.local/share/fonts && \
+# 	curl -fLo "Fira Code Regular Nerd Font Complete.otf" \
+# 	https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf
+
