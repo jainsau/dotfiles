@@ -11,7 +11,7 @@ TERM=kitty
 
 # Source nix
 # NB: kitty install isn't working on macOS Monterrey (TBI)
-install_list=(nixpkgs.{$SHELL,antibody,tmux,asdf,wget,neovim,stow,clang,git,ripgrep,minikube,nodejs})
+install_list=(nixpkgs.{$SHELL,antibody,bat,helm,tmux,asdf,wget,neovim,stow,clang,git,ripgrep,minikube,nodejs})
 nix-env -iA $install_list
 
 # Install and setup direnv to work with asdf

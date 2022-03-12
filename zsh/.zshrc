@@ -93,7 +93,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(tmux)
+plugins=()
 
 source $ZSH/oh-my-zsh.sh
 
@@ -129,6 +129,7 @@ set -o vi
 alias lt="ls -lahrt"
 alias tl="tree -aL"
 alias vim=nvim
+alias cat=bat
 
 # Helper function for quick access to internet man-pages
 cs() {curl https://cheat.sh/{$1}}

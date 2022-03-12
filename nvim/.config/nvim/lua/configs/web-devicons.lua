@@ -1,11 +1,9 @@
-local status_ok, configs = pcall(require, "nvim-web-devicons")
+local status_ok, devicons = pcall(require, "nvim-web-devicons")
 if not status_ok then
 	return
 end
 
-configs.setup {
- -- your personnal icons can go here (to override)
- -- you can specify color or cterm_color instead of specifying both of them
+devicons.setup {
  -- DevIcon will be appended to `name`
  override = {
   zsh = {
