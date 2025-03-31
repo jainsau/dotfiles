@@ -1,5 +1,41 @@
-tags
-test.sh
-.luarc.json
-nvim
-lazy-lock.json
+# Nix environment
+.direnv
+result
+
+# Home Manager
+.home-manager
+
+# Editors and IDEs
+.vscode/
+*.swp
+*.swo
+.idea/
+
+# Logs and caches
+*.log
+*.bak
+*.cache/
+
+# Shell session
+.zsh_history
+
+# Compiled code
+*.o
+*.a
+*.so
+*.out
+*.dylib
+
+# Temporary files
+*~
+.*.un~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# install scripts generated binaries
+install
+
+# stow generated files
+stow/
