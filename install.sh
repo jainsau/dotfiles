@@ -13,35 +13,41 @@ source "$SCRIPT_DIR/lib/stow.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 source "$SCRIPT_DIR/lib/home_manager.sh"
 
-# Main Process
-echo ">>> Starting Bootstrap Process..."
+echo "🚀 Starting Bootstrap Process..."
 
 # Step 1:
-if ! check_nix_installed; then
-  install_nix
-else
-  echo ">>> Nix is already installed."
+if is_nix_installed; then
+  echo "✅ Nix is already installed."
   update_nix
+else
+  install_nix
 fi
 
 # Step 2: Install Home Manager
-if ! check_home_manager_installed; then
-  install_home_manager
+if is_home_manager_installed; then
+  echo "✅ Home Manager is already installed."
 else
-  echo ">>> Home Manager is already installed."
+  install_home_manager
 fi
 
 # Step 3: Apply Home Manager Configuration
-ln -s "$SOURCE_CONFIG_DIR/home-manager/home.nix" "$TARGET_CONFIG_DIR/home-manager/home.nix"
-apply_home_manager_config
+apply_home_manager_config "$SOURCE_CONFIG_DIR" "$TARGET_CONFIG_DIR"
 
 # Step 4: Link config files
 link_with_stow "$SOURCE_CONFIG_DIR" "$TARGET_CONFIG_DIR"
 
-# Step 5:
-# Add zsh as a login shell
-! [[ $(grep zsh /etc/shells) ]] && command -v zsh | sudo tee -a /etc/shells
-# use zsh as default shell
+# Step 5: Add zsh as a login shell
+! grep -q zsh /etc/shells && command -v zsh | sudo tee -a /etc/shells
+
+# Step 6: Use zsh as default shell
 sudo chsh -s $(which zsh) $USER
 
-echo ">>> Bootstrap process completed successfully!"
+# Step 7: Install Kitty
+if ! is_kitty_installed; then
+  echo "📦 Installing Kitty..."
+  curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+else
+  echo "✅ Kitty is already installed."
+fi
+
+echo "✅ Bootstrap process completed successfully!"

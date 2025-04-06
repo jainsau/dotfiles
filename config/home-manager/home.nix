@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # User settings
-  home.username = "saurabh";
-  home.homeDirectory = "/Users/saurabh";
+  home.username = builtins.getEnv "USER";
+  home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "24.05";
 
   # Environment variables
@@ -18,7 +18,10 @@
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
-    ZSH_TMUX_AUTOSTART = "true";
+    ZSH_TMUX_AUTOSTART = "true";    # Auto-starts tmux when shell launches
+    ZSH_TMUX_AUTOCONNECT = "true";  # Don't close the shell if you exit tmux
+    ZSH_TMUX_AUTOQUIT = "false";    # Attaches to existing tmux session if available
+    ZSH_TMUX_FIXTERM = "true";      # Fix $TERM inside tmux to avoid comatibility issues
   };
 
   # Enable Fontconfig (for proper font rendering)
@@ -36,9 +39,11 @@
 
   # Package Installations
   home.packages = with pkgs; [
-    eza fd htop jq ripgrep tree yq lazygit stow
+    eza fd htop jq ripgrep tree
+    yq lazygit stow pstree nmap
+    black isort
     fontconfig # Ensures `fc-list` works
-    (nerdfonts.override { fonts = [ "FiraCode" "Meslo" ]; })
+    nerd-fonts.fira-code nerd-fonts.meslo-lg
   ];
 
   # Powerlevel10k Configuration File
@@ -115,7 +120,7 @@
       enable = true;
       plugins = [
         "aliases" "command-not-found" "common-aliases" "dirhistory" "git"
-        "git-extras" "history" "sudo" "vi-mode" "z"
+        "git-extras" "history" "sudo" "vi-mode" "z" "tmux"
         "zsh-interactive-cd"
       ];
     };
@@ -170,6 +175,8 @@
     extraConfig = ''
       set -g mouse on
       set -g set-clipboard on # Fix clipboard issues
+      set-option -g default-shell ${pkgs.zsh}/bin/zsh
+      set-option -g default-command "${pkgs.zsh}/bin/zsh -l"
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'
@@ -212,13 +219,17 @@
     };
   };
 
-  # # Python package management
-  # programs.poetry = {
-  #   enable = true;
-  #   virtualenvs.prefer-active = true;  # Uses existing virtualenvs instead of making new ones
-  #     virtualenvs.in-project = true;     # Keeps virtualenv inside project folder
-  # };
-  #
+  # Python package management
+  programs.poetry = {
+    enable = true;
+  };
+
+  home.file.".config/pypoetry/config.toml".text = ''
+    [virtualenvs]
+    in-project = true
+    prefer-active = true
+    '';
+
   # Other Useful Programs
   programs.fzf = { enable = true; enableZshIntegration = true; };
   programs.bat.enable = true;

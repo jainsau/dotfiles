@@ -2,7 +2,7 @@
 
 return {
   {
-    "folke/tokyonight.nvim",
+    'folke/tokyonight.nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
@@ -13,11 +13,11 @@ return {
   {
     -- Detect tabstop and shiftwidth automatically
     -- See `:help sleuth.txt`
-    'tpope/vim-sleuth'
+    'tpope/vim-sleuth',
   },
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-    -- See `:help gitsigns` to understand what the configuration keys do
+  -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -50,6 +50,6 @@ return {
     'folke/todo-comments.nvim',
     event = 'VimEnter',
     dependencies = { 'nvim-lua/plenary.nvim' },
-    opts = { signs = false }
+    opts = { signs = false },
   },
 }
