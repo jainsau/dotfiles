@@ -42,4 +42,7 @@ link_with_stow "$SOURCE_CONFIG_DIR" "$TARGET_CONFIG_DIR"
 # Step 6: Use zsh as default shell
 sudo chsh -s $(which zsh) $USER
 
+# Step 7: Install Kitty
+! [[ is_kitty_installed ]] && curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+
 echo "✅ Bootstrap process completed successfully!"

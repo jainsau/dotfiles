@@ -24,7 +24,7 @@ apply_home_manager_config() {
     echo "🔗 Checking for existing config at $target"
 
     # Create symlink only if none exists
-    if [[ ! -L $target && ! -f $target ]]; then
+    if [[ ! -L $target ]]; then
         echo "📎 Creating temporary symlink: $source → $target"
         ln -s "$source" "$target"
     fi
@@ -39,5 +39,5 @@ apply_home_manager_config() {
 
     # Remove symlink if it was created here
     echo "🧹 Cleaning up temporary symlink: $target"
-    rm -f "$target"
+    [[ -L $target ]] && rm -f "$target"
 }
