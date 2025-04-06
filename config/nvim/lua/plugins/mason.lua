@@ -73,5 +73,4 @@ return { -- Automatically install LSPs and related tools to stdpath for neovim
       },
     }
   end,
-
 }

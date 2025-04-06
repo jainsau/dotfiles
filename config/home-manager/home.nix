@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # User settings
-  home.username = "saurabh";
-  home.homeDirectory = "/Users/saurabh";
+  home.username = builtins.getEnv "USER";
+  home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "24.05";
 
   # Environment variables
@@ -36,9 +36,15 @@
 
   # Package Installations
   home.packages = with pkgs; [
-    eza fd htop jq ripgrep tree yq lazygit stow
+    eza fd htop jq ripgrep tree
+    yq lazygit stow pstree nmap
+    black isort
     fontconfig # Ensures `fc-list` works
+  ] ++ lib.optionals stdenv.isDarwin [
     (nerdfonts.override { fonts = [ "FiraCode" "Meslo" ]; })
+  ] ++ lib.optionals (!stdenv.isDarwin) [
+    nerd-fonts.fira-code
+    nerd-fonts.meslo-lg
   ];
 
   # Powerlevel10k Configuration File
@@ -212,13 +218,17 @@
     };
   };
 
-  # # Python package management
-  # programs.poetry = {
-  #   enable = true;
-  #   virtualenvs.prefer-active = true;  # Uses existing virtualenvs instead of making new ones
-  #     virtualenvs.in-project = true;     # Keeps virtualenv inside project folder
-  # };
-  #
+  # Python package management
+  programs.poetry = {
+    enable = true;
+  };
+
+  home.file.".config/pypoetry/config.toml".text = ''
+    [virtualenvs]
+    in-project = true
+    prefer-active = true
+    '';
+
   # Other Useful Programs
   programs.fzf = { enable = true; enableZshIntegration = true; };
   programs.bat.enable = true;
