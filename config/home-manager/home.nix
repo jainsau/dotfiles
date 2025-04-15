@@ -1,6 +1,11 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
+  # Importing language specific modules
+  imports = [
+    ./modules/languages/python.nix
+  ];
+
   # User settings
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
@@ -41,7 +46,7 @@
   home.packages = with pkgs; [
     eza fd htop jq ripgrep tree
     yq lazygit stow pstree nmap
-    black isort
+    go nil
     fontconfig # Ensures `fc-list` works
     nerd-fonts.fira-code nerd-fonts.meslo-lg
   ];
@@ -64,6 +69,15 @@
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
+
+    # TODO: This stub is specific to MacOS. Move to Darwin Manager.
+    envExtra = ''
+      # Add Nix to path
+      if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+        . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+      fi
+    '';
+
     initExtra = ''
       # Enable Powerlevel10k instant prompt (if available)
       if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
@@ -196,6 +210,32 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+
+    stdlib = ''
+      layout_poetry() {
+        PYPROJECT_TOML="''${PYPROJECT_TOML:-pyproject.toml}"
+        if [[ ! -f "$PYPROJECT_TOML" ]]; then
+            log_status "No pyproject.toml found. Executing \`poetry init\` to create a \`$PYPROJECT_TOML\` first."
+            poetry init
+        fi
+
+        if [[ -d ".venv" ]]; then
+            VIRTUAL_ENV="$(pwd)/.venv"
+        else
+            VIRTUAL_ENV=$(poetry env info --path 2>/dev/null ; true)
+        fi
+
+        if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
+            log_status "No virtual environment exists. Executing \`poetry install\` to create one."
+            poetry install
+            VIRTUAL_ENV=$(poetry env info --path)
+        fi
+
+        PATH_add "$VIRTUAL_ENV/bin"
+        export POETRY_ACTIVE=1
+        export VIRTUAL_ENV
+      }
+    '';
   };
 
   # Git Configuration
@@ -218,17 +258,6 @@
       };
     };
   };
-
-  # Python package management
-  programs.poetry = {
-    enable = true;
-  };
-
-  home.file.".config/pypoetry/config.toml".text = ''
-    [virtualenvs]
-    in-project = true
-    prefer-active = true
-    '';
 
   # Other Useful Programs
   programs.fzf = { enable = true; enableZshIntegration = true; };
