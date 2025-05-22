@@ -1,14 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, ... }@args:
 
-{
+let
+  username = args.username or "unknown";
+  homeDirectory = args.homeDirectory or "/dev/null";
+in {
   # Importing language specific modules
   imports = [
     ./modules/languages/python.nix
   ];
 
-  # User settings
-  home.username = builtins.getEnv "USER";
-  home.homeDirectory = builtins.getEnv "HOME";
+  home = { inherit username homeDirectory; };
   home.stateVersion = "24.05";
 
   # Environment variables
@@ -19,14 +20,14 @@
     PATH = "$HOME/.nix-profile/bin:$PATH";
     TERM = "xterm-256color";
     TERMINAL = "kitty";
-    XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
-    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-    XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
     ZSH_TMUX_AUTOSTART = "true";    # Auto-starts tmux when shell launches
     ZSH_TMUX_AUTOCONNECT = "true";  # Don't close the shell if you exit tmux
     ZSH_TMUX_AUTOQUIT = "false";    # Attaches to existing tmux session if available
     ZSH_TMUX_FIXTERM = "true";      # Fix $TERM inside tmux to avoid comatibility issues
+    XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+    XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
   };
 
   # Enable Fontconfig (for proper font rendering)
@@ -69,16 +70,10 @@
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
-
-    # TODO: This stub is specific to MacOS. Move to Darwin Manager.
-    envExtra = ''
-      # Add Nix to path
-      if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-        . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-      fi
-    '';
-
     initExtra = ''
+      # Homebrew (Apple Silicon)
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+
       # Enable Powerlevel10k instant prompt (if available)
       if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
         source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
@@ -189,14 +184,16 @@
     extraConfig = ''
       set -g mouse on
       set -g set-clipboard on # Fix clipboard issues
-      set-option -g default-shell ${pkgs.zsh}/bin/zsh
-      set-option -g default-command "${pkgs.zsh}/bin/zsh -l"
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'
 
       # Keep backtick key accessible
       bind-key "`" send-prefix
+
+      # Add zsh as login shell
+      set -g default-shell ${pkgs.zsh}/bin/zsh
+      set -g default-command "${pkgs.zsh}/bin/zsh -l"
 
       # Split creation shortcuts
       unbind %
