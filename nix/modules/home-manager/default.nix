@@ -1,14 +1,18 @@
-{ config, pkgs, ... }:
+{ config, pkgs, ... }@args:
 
-{
+let
+  username = args.username;
+  homeDirectory = args.homeDirectory;
+  gitUser = args.gitUser;
+  gitEmail = args.gitEmail;
+in {
   # Importing language specific modules
   imports = [
     ./modules/languages/python.nix
   ];
 
-  # User settings
-  home.username = builtins.getEnv "USER";
-  home.homeDirectory = builtins.getEnv "HOME";
+  home.username = args.username;
+  home.homeDirectory = args.homeDirectory;
   home.stateVersion = "24.05";
 
   # Environment variables
@@ -19,14 +23,14 @@
     PATH = "$HOME/.nix-profile/bin:$PATH";
     TERM = "xterm-256color";
     TERMINAL = "kitty";
-    XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
-    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-    XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
     ZSH_TMUX_AUTOSTART = "true";    # Auto-starts tmux when shell launches
     ZSH_TMUX_AUTOCONNECT = "true";  # Don't close the shell if you exit tmux
     ZSH_TMUX_AUTOQUIT = "false";    # Attaches to existing tmux session if available
     ZSH_TMUX_FIXTERM = "true";      # Fix $TERM inside tmux to avoid comatibility issues
+    XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+    XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
   };
 
   # Enable Fontconfig (for proper font rendering)
@@ -51,13 +55,11 @@
     nerd-fonts.fira-code nerd-fonts.meslo-lg
   ];
 
-  # Powerlevel10k Configuration File
-  home.file.".config/zsh/p10k.zsh".source = ./p10k.zsh;
-
-  # Enable Home Manager
   programs.home-manager.enable = true;
 
-  # Kitty Terminal
+  programs.neovim.enable = true;
+  home.file.".config/nvim/".source = "${args.inputs.nvim-config}";
+
   programs.kitty = {
     enable = true;
     settings = {
@@ -65,20 +67,19 @@
     };
   };
 
-  # Zsh Configuration
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
-
-    # TODO: This stub is specific to MacOS. Move to Darwin Manager.
-    envExtra = ''
-      # Add Nix to path
-      if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-        . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    initContent = ''
+      # Nix
+      if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       fi
-    '';
+      # End Nix
 
-    initExtra = ''
+      # Homebrew (Apple Silicon)
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+
       # Enable Powerlevel10k instant prompt (if available)
       if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
         source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
@@ -109,7 +110,6 @@
       eval "$(direnv hook zsh)"
       }
     '';
-
     shellAliases = {
       g = "git";
       ga = "git add";
@@ -169,6 +169,7 @@
       }
     ];
   };
+  home.file.".config/zsh/p10k.zsh".source = ./p10k.zsh;
 
   # Tmux Configuration
   programs.tmux = {
@@ -189,14 +190,16 @@
     extraConfig = ''
       set -g mouse on
       set -g set-clipboard on # Fix clipboard issues
-      set-option -g default-shell ${pkgs.zsh}/bin/zsh
-      set-option -g default-command "${pkgs.zsh}/bin/zsh -l"
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'
 
       # Keep backtick key accessible
       bind-key "`" send-prefix
+
+      # Add zsh as login shell
+      set -g default-shell ${pkgs.zsh}/bin/zsh
+      set -g default-command "${pkgs.zsh}/bin/zsh -l"
 
       # Split creation shortcuts
       unbind %
@@ -241,8 +244,8 @@
   # Git Configuration
   programs.git = {
     enable = true;
-    userName = "Saurabh Jain";
-    userEmail = "saurabh_jain2011@pgp.isb.edu";
+    userName = args.gitUser;
+    userEmail = args.gitEmail;
   };
 
   programs.lazygit = {
@@ -262,5 +265,4 @@
   # Other Useful Programs
   programs.fzf = { enable = true; enableZshIntegration = true; };
   programs.bat.enable = true;
-  programs.neovim.enable = true;
 }

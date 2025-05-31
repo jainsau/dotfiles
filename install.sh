@@ -2,52 +2,91 @@
 
 set -Eeuo pipefail
 
-# Define Paths
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_CONFIG_DIR="$SCRIPT_DIR/config"
-TARGET_CONFIG_DIR="$HOME/.config"
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
 
-# Load utility modules
-source "$SCRIPT_DIR/lib/nix.sh"
-source "$SCRIPT_DIR/lib/stow.sh"
-source "$SCRIPT_DIR/lib/utils.sh"
-source "$SCRIPT_DIR/lib/home_manager.sh"
+install_kitty() {
+    if command -v kitty &> /dev/null; then
+        echo -e "${GREEN}Kitty is already installed.${NC}"
+    else
+        echo -e "${BLUE}Installing Kitty...${NC}"
+        curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+        echo -e "${GREEN}Kitty installed.${NC}"
+    fi
+}
 
-echo "🚀 Starting Bootstrap Process..."
+install_nix() {
+    local daemon_path="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 
-# Step 1:
-if is_nix_installed; then
-  echo "✅ Nix is already installed."
-  update_nix
-else
-  install_nix
-fi
+    if [[ -e "$daemon_path" ]]; then
+        echo -e "${GREEN}Nix daemon is already installed.${NC}"
+    else
+        echo -e "${BLUE}Installing Nix package manager...${NC}"
+        curl -L https://nixos.org/nix/install | sh -s -- --daemon
+        # making sure that `nix run` works
+        echo "experimental-features = nix-command flakes" > ${HOME}/.config/nix/nix.conf
+        echo -e "${YELLOW}Please log out and log back in to reload your shell environment.${NC}"
+    fi
+}
 
-# Step 2: Install Home Manager
-if is_home_manager_installed; then
-  echo "✅ Home Manager is already installed."
-else
-  install_home_manager
-fi
+make_zsh_default() {
+    local zsh_bin
+    zsh_bin="$(command -v zsh)"
 
-# Step 3: Apply Home Manager Configuration
-apply_home_manager_config "$SOURCE_CONFIG_DIR" "$TARGET_CONFIG_DIR"
+    if ! grep -q "$zsh_bin" /etc/shells; then
+        echo -e "${BLUE}Adding zsh to /etc/shells...${NC}"
+        echo "$zsh_bin" | sudo tee -a /etc/shells
+    fi
 
-# Step 4: Link config files
-link_with_stow "$SOURCE_CONFIG_DIR" "$TARGET_CONFIG_DIR"
+    if [[ "$SHELL" != "$zsh_bin" ]]; then
+        echo -e "${BLUE}Changing default shell to zsh...${NC}"
+        sudo chsh -s "$zsh_bin" "$USER"
+    else
+        echo -e "${GREEN}zsh is already the default shell.${NC}"
+    fi
+}
 
-# Step 5: Add zsh as a login shell
-! grep -q zsh /etc/shells && command -v zsh | sudo tee -a /etc/shells
+show_post_bootstrap_instructions() {
+    local os arch
+    os="$(uname -s)"
+    arch="$(uname -m)"
 
-# Step 6: Use zsh as default shell
-sudo chsh -s $(which zsh) $USER
+    echo -e "${YELLOW}To apply your Nix configuration, run one of the following after restarting your shell:${NC}"
 
-# Step 7: Install Kitty
-if ! is_kitty_installed; then
-  echo "📦 Installing Kitty..."
-  curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-else
-  echo "✅ Kitty is already installed."
-fi
+    case "$os" in
+        Darwin)
+            case "$arch" in
+                arm64)
+                    echo -e "${BLUE}  nix run .#dma-switch${NC}"
+                    echo -e "${BLUE}  nix run .#hma-switch${NC}"
+                    ;;
+                x86_64)
+                    echo -e "${BLUE}  nix run .#dmx-switch${NC}"
+                    echo -e "${BLUE}  nix run .#hmx-switch${NC}"
+                    ;;
+            esac
+            ;;
+        Linux)
+            case "$arch" in
+                aarch64)
+                    echo -e "${BLUE}  nix run .#hla-switch${NC}"
+                    ;;
+                x86_64)
+                    echo -e "${BLUE}  nix run .#hlx-switch${NC}"
+                    ;;
+            esac
+            ;;
+    esac
+}
 
-echo "✅ Bootstrap process completed successfully!"
+# --- Run the steps ---
+install_kitty
+install_nix
+make_zsh_default
+show_post_bootstrap_instructions
+
+echo -e "${GREEN}Bootstrap process completed successfully.${NC}"
