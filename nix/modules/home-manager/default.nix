@@ -8,7 +8,8 @@ let
 in {
   # Importing language specific modules
   imports = [
-    ./modules/languages/python.nix
+    ./editors
+    ./languages/python.nix
   ];
 
   home.username = args.username;
@@ -17,6 +18,7 @@ in {
 
   # Environment variables
   home.sessionVariables = {
+    DIRENV_LOG_FORMAT="";
     EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     LC_ALL="en_US.UTF-8";
@@ -50,15 +52,18 @@ in {
   home.packages = with pkgs; [
     eza fd htop jq ripgrep tree
     yq lazygit stow pstree nmap
+    nerd-fonts.fira-code nerd-fonts.meslo-lg fontconfig # Ensures `fc-list` works
+    nodejs_20 nodePackages.markdownlint-cli
     go nil
-    fontconfig # Ensures `fc-list` works
-    nerd-fonts.fira-code nerd-fonts.meslo-lg
+    rustc cargo
   ];
 
   programs.home-manager.enable = true;
 
-  programs.neovim.enable = true;
-  home.file.".config/nvim/".source = "${args.inputs.nvim-config}";
+  editors = {
+    enableVSCode = true;
+    enableNeovim = true;
+  };
 
   programs.kitty = {
     enable = true;
