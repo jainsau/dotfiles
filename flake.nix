@@ -1,6 +1,8 @@
+# === FLAKE DEFINITION ===
 {
   description = "Cross-platform Nix configuration for Darwin and Home Manager";
 
+  # === INPUTS ===
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
@@ -14,17 +16,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvim-config = {
-      url = "path:./config/nvim";
-      flake = false;
-    };
-
     # User config (like username, home directory, git identity)
     userConfig.url = "path:./config/userConfig";
   };
 
+  # === OUTPUTS ===
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, ... }:
     let
+      # --- Supported system definitions ---
       systems = {
         "dma" = { system = "aarch64-darwin"; type = "darwin"; };
         "dmx" = { system = "x86_64-darwin"; type = "darwin"; };
@@ -34,15 +33,21 @@
         "hlx" = { system = "x86_64-linux"; type = "home"; };
       };
 
-      # Create a pkgs instance per target system
+      # --- Local package overlay ---
+      localOverlay = final: prev: {
+        opencode = final.callPackage ./nix/home-manager/modules/cli/opencode.nix { };
+      };
+
+      # --- Helper: Create a pkgs instance per target system ---
       mkPkgs = system: import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [ localOverlay ];
       };
 
       userConfig = inputs.userConfig.config;
 
-      # Create a Home Manager configuration
+      # --- Helper: Create a Home Manager configuration ---
       mkHomeConfig = name: cfg: {
         name = name;
         value = home-manager.lib.homeManagerConfiguration {
@@ -52,11 +57,11 @@
             inherit (userConfig) username homeDirectory gitUser gitEmail;
             system = cfg.system;
           };
-          modules = [ ./nix/modules/home-manager ];
+          modules = [ ./nix/home-manager ];
         };
       };
 
-      # Create a nix-darwin system configuration
+      # --- Helper: Create a nix-darwin system configuration ---
       mkDarwinConfig = name: cfg: {
         name = name;
         value = nix-darwin.lib.darwinSystem {
@@ -69,15 +74,15 @@
           };
           modules = [
             { users.users.${userConfig.username}.home = userConfig.homeDirectory; }
-            ./nix/modules/darwin
+            ./nix/darwin
           ];
         };
       };
 
-      # Get all defined system names
+      # --- Helper: Get all defined system names ---
       allNames = builtins.attrNames systems;
 
-      # Generate a set of configurations of a given type
+      # --- Helper: Generate a set of configurations of a given type ---
       makeConfigs = type: mkFunc: builtins.listToAttrs (
         builtins.filter (x: x != null) (
           map (name:
@@ -87,13 +92,13 @@
         )
       );
 
-      # Generate all home-manager configs
+      # --- Generate all home-manager configs ---
       homeConfigs = makeConfigs "home" mkHomeConfig;
 
-      # Generate all nix-darwin configs
+      # --- Generate all nix-darwin configs ---
       darwinConfigs = makeConfigs "darwin" mkDarwinConfig;
 
-      # Create per-system `*-switch` packages for convenience
+      # --- Create per-system `*-switch` packages for convenience ---
       switchPackages = builtins.foldl'
         (acc: name:
           let
@@ -118,13 +123,9 @@
         allNames;
     in
     {
-      # Expose home-manager configurations
-      homeConfigurations = homeConfigs;
-
-      # Expose nix-darwin system configurations
-      darwinConfigurations = darwinConfigs;
-
-      # Expose helper packages to run switch commands
-      packages = switchPackages;
+      # === EXPORTED OUTPUTS ===
+      homeConfigurations = homeConfigs;      # Home Manager configurations
+      darwinConfigurations = darwinConfigs;  # nix-darwin system configurations
+      packages = switchPackages;             # Helper packages to run switch commands
     };
 }

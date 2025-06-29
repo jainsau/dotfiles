@@ -2,13 +2,14 @@
 
 set -Eeuo pipefail
 
-# Colors
+# === COLOR DEFINITIONS ===
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# === Install Kitty Terminal ===
 install_kitty() {
     if command -v kitty &> /dev/null; then
         echo -e "${GREEN}Kitty is already installed.${NC}"
@@ -19,6 +20,7 @@ install_kitty() {
     fi
 }
 
+# === Install Nix Package Manager ===
 install_nix() {
     local daemon_path="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 
@@ -27,12 +29,13 @@ install_nix() {
     else
         echo -e "${BLUE}Installing Nix package manager...${NC}"
         curl -L https://nixos.org/nix/install | sh -s -- --daemon
-        # making sure that `nix run` works
+        # Ensure that `nix run` works by enabling flakes and nix-command
         echo "experimental-features = nix-command flakes" > ${HOME}/.config/nix/nix.conf
         echo -e "${YELLOW}Please log out and log back in to reload your shell environment.${NC}"
     fi
 }
 
+# === Set Zsh as Default Shell ===
 make_zsh_default() {
     local zsh_bin
     zsh_bin="$(command -v zsh)"
@@ -50,6 +53,7 @@ make_zsh_default() {
     fi
 }
 
+# === Show Post-Bootstrap Instructions ===
 show_post_bootstrap_instructions() {
     local os arch
     os="$(uname -s)"
@@ -83,7 +87,7 @@ show_post_bootstrap_instructions() {
     esac
 }
 
-# --- Run the steps ---
+# === MAIN BOOTSTRAP SEQUENCE ===
 install_kitty
 install_nix
 make_zsh_default

@@ -5,6 +5,9 @@ result
 # Home Manager
 .home-manager
 
+# AI Tools
+.opencode/
+
 # Editors and IDEs
 .vscode/
 *.swp
