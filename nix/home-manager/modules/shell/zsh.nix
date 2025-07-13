@@ -4,11 +4,7 @@
   # Enable command-not-found handler
   programs.command-not-found.enable = true;
 
-  # Zoxide (for 'z' command)
-  programs.zoxide = {
-    enable = true;
-    # The zsh integration is handled manually in zsh.initExtra below
-  };
+
 
   # Starship Prompt Configuration
   programs.starship = {
@@ -64,14 +60,7 @@
       zle -N insert-sudo
       bindkey "\e\e" insert-sudo
 
-      # Shortcut to Internet Man-Pages
-      cs() {
-        if command -v curl >/dev/null; then
-          curl https://cheat.sh/{$1}
-        else
-          echo "curl not found. Install it to use cs function."
-        fi
-      }
+
 
       # Hook DIRENV
       eval "$(direnv hook zsh)"
@@ -80,14 +69,9 @@
       autoload -U compinit
       compinit
 
-      # Directory navigation aliases
-      alias ..="cd .."
-      alias ...="cd ../.."
-      alias ....="cd ../../.."
-      alias .....="cd ../../../.."
 
-      # Hook Zoxide
-      eval "$(zoxide init zsh)"
+
+
     '';
 
     # Zsh Enhancements
@@ -116,5 +100,14 @@
         src = pkgs.zsh-completions;
       }
     ];
+  };
+
+  # === NAVIGATION ALIASES ===
+  home.shellAliases = {
+    # Directory navigation shortcuts
+    ".." = "cd ..";
+    "..." = "cd ../..";
+    "...." = "cd ../../..";
+    "....." = "cd ../../../..";
   };
 }

@@ -60,20 +60,8 @@
       "inputs": {
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs",
-        "userConfig": "userConfig"
+        "nixpkgs": "nixpkgs"
       }
-    },
-    "userConfig": {
-      "locked": {
-        "path": "./config/userConfig",
-        "type": "path"
-      },
-      "original": {
-        "path": "./config/userConfig",
-        "type": "path"
-      },
-      "parent": []
     }
   },
   "root": "root",

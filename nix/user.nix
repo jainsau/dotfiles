@@ -1,7 +1,6 @@
 {
   username = "saurabh";
   homeDirectory = "/Users/saurabh";
-  gitUser = "Saurabh Jain";
+  gitUser = "Saurabh";
   gitEmail = "saurabh_jain2011@pgp.isb.edu";
 }
-

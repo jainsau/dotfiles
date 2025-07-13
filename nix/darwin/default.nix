@@ -2,9 +2,7 @@
 { pkgs, ... }@args:
 
 {
-  imports = [
-    ./ollama.nix
-  ];
+  imports = [ ];
 
   # --- Set build group ID for nixbld ---
   ids.gids.nixbld = 350;
@@ -41,8 +39,6 @@
     brews = [
       "lima"
       "colima"
-      # TODO: Move gemini-cli to home-manager configuration (see ./dev/gemini.nix)
-      "gemini-cli"
    ];
     taps = [
     ];

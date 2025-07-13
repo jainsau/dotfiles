@@ -11,6 +11,8 @@ This repository contains my personal dotfiles, managed with **Nix** and **Home M
 - **Modern Shell**: A powerful Zsh environment managed natively with Home Manager, featuring [Starship](https://starship.rs/) for a minimal and fast prompt.
 - **Customized Editors**: Tailored configurations for Neovim (based on a streamlined Lua setup) and VSCode.
 - **Rich Toolset**: Includes curated configurations for dozens of popular CLI and development tools like `eza`, `bat`, `fzf`, `git`, `delta`, and `lazygit`.
+- **Modular config logic** lives in `nix/` (parameterized by settings)
+- **Pure flake** (`flake.nix`) with user settings imported from `nix/user.nix` for reproducibility.
 
 ---
 
@@ -24,82 +26,68 @@ dotfiles/
 ├── install.sh       # Installation script
 ├── prompts/         # AI agent prompts and workflows
 └── nix/
+    ├── user.nix     # User-specific settings
+    ├── mkConfig.nix # Configuration generation logic
+    ├── systems.nix  # System definitions (Darwin/Home Manager)
     ├── darwin/      # macOS-specific system configurations
     └── home-manager/  # User-level configurations (managed by Home Manager)
         ├── modules/   # The heart of the setup:
-        │   ├── cli/       # Modules for CLI tools (e.g., eza, fzf)
-        │   ├── dev/       # Modules for development tools (e.g., git, direnv)
-        │   ├── fun/       # Modules for fun utilities (e.g., cowsay)
+        │   ├── cli/       # CLI tools (e.g., eza, fzf, git, delta, lazygit)
+        │   ├── dev/       # Development tools (e.g., direnv, language tools)
         │   ├── shell/     # Zsh, Tmux, and other shell settings
-        │   └── system/    # System-related tools (e.g., podman)
+        │   └── system-tools.nix  # System monitoring tools (e.g., podman, nmap)
         └── default.nix  # Aggregates all Home Manager configurations
+```
+
+---
+
+## 🚀 Installation & Usage
+
+1.  **Clone the Repository**: 
+    ```bash
+    git clone https://github.com/your-username/dotfiles.git ~/.dotfiles
+    cd ~/.dotfiles
+    ```
+2.  **Run the Installation Script**: This will install Nix and set up your environment.
+    ```bash
+    ./install.sh
+    ```
+3.  **Edit User Settings**: If needed, edit your user-specific settings in `nix/user.nix`.
+4.  **Apply Changes**: After editing your configuration, apply the changes with:
+    - `nix run .#hma-switch` (for Home Manager)
+    - `nix run .#dma-switch` (for Darwin)
+
+---
+
+## 🔧 User Settings
+
+User-specific settings (such as username, home directory, git identity) are defined in `nix/user.nix`. Edit this file to personalize your setup:
+
+```nix
+{
+  username = "your_username";
+  homeDirectory = "/Users/your_username";
+  gitUser = "Your Name";
+  gitEmail = "your.email@example.com";
+}
 ```
 
 ---
 
 ## 🤖 AI Agent Prompts
 
-The `prompts/` directory contains specialized prompts and workflows for AI agents like **opencode** and **Gemini CLI** to help maintain and improve this dotfiles project:
-
-- **`prompts/nix/`** - Nix-specific prompts for package management and troubleshooting
-- **`prompts/workflows/`** - Multi-step workflows for common maintenance tasks
-- **`prompts/templates/`** - Reusable prompt templates for configuration reviews
-- **`prompts/dotfiles/`** - General dotfiles management and migration planning
+The `prompts/` directory contains prompts for AI agents to help maintain this project.
 
 ### Usage Examples
 
 ```bash
-# Review packages with opencode
-opencode -p prompts/nix/audit.md
-
-# Audit module structure with Gemini
-gemini -f prompts/workflows/check.md
+# Copy prompt content and use with your preferred AI assistant
+# Example: prompts/nix/audit.md for package reviews
+# Example: prompts/workflows/check.md for module structure audits
 ```
-
----
-
-## 🚀 Installation
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/your-username/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-```
-*(Replace `your-username` with your actual GitHub username.)*
-
-### 2. Run the Installation Script
-The script will automatically install Nix if it's not present on your system, then apply the configuration.
-```bash
-./install.sh
-```
-
----
-
-## 🛠️ Applying Changes
-
-After making changes to the configuration, you can apply them using the following commands:
-
-- **Apply Home Manager configuration only:**
-  ```bash
-  nix run .#hma-switch
-  ```
-
-- **Apply Darwin system configuration only:**
-  ```bash
-  nix run .#dma-switch
-  ```
-
----
-
-## 🛠️ Customization
-
-To add, remove, or modify a tool, simply edit the corresponding file in the `nix/home-manager/modules/` subdirectories and re-run the appropriate switch command.
-
-For example, to change the `git` aliases, you would edit `nix/home-manager/modules/dev/git.nix` and then run `nix run .#hma-switch`.
 
 ---
 
 ## 🙏 Credits
 
 This project was inspired by the robust and declarative nature of Nix and the broader Nix community.
-

@@ -18,6 +18,11 @@ with lib;
       ];
     };
 
+    home.shellAliases = {
+      # Vim replacement
+      vim = "nvim";
+    };
+
     # Symlink ./config to ~/.config/nvim
     xdg.configFile."nvim".source = ./.;  # assumes init.lua and lua/ live here
   };

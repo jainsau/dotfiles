@@ -21,10 +21,9 @@ This is a cross-platform dotfiles project with:
 
 ## Current Package Categories
 
-- **CLI Tools**: eza, fd, ripgrep, jq, yq, htop, tree, pstree, dust, duf, procs, bottom, tealdeer, hyperfine, tokei, fzf, zoxide, bat
-- **Development**: git, direnv, lazygit, delta, gh, glab, just, watchexec, entr, stow, nil, glow, slides, sd, choose, miller, htmlq, gron, nodejs, markdownlint, go, rustc, cargo, bun
-- **Fun**: fortune, cowsay, lolcat, figlet
-- **System**: nmap, bandwhich, iftop, lsof, ncdu, neofetch, macchina, podman
+- **CLI Tools**: eza, fd, ripgrep, jq, yq, htop, tree, pstree, dust, duf, procs, bottom, tealdeer, hyperfine, tokei, fzf, zoxide, bat, git (with delta, lazygit)
+- **Development**: direnv, watchexec, entr, nil, glow, nodejs, markdownlint, go, rustc, cargo, bun
+- **System**: nmap, bandwhich, iftop, lsof, ncdu, podman
 - **Shell**: zsh, tmux
 
 ## Questions to Answer

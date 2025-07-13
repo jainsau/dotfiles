@@ -1,4 +1,3 @@
-# === HOME MANAGER CONFIGURATION ===
 { config, pkgs, ... }@args:
 
 let
@@ -11,12 +10,10 @@ in {
     ./modules
   ];
 
-  # --- User and Home Directory ---
-  home.username = args.username;
-  home.homeDirectory = args.homeDirectory;
+  home.username = username;
+  home.homeDirectory = homeDirectory;
   home.stateVersion = "24.05";
 
-  # --- Environment Variables ---
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
     LC_ALL="en_US.UTF-8";
@@ -28,7 +25,14 @@ in {
     XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
   };
 
-  # --- Garbage Collection Optimization (weekly cleanup of old generations) ---
+  home.shellAliases = {
+    serve = "python3 -m http.server";
+    myip = "curl -s https://httpbin.org/ip | jq -r .origin";
+    cs = "curl https://cheat.sh/{$1}";
+  };
+
+  fonts.fontconfig.enable = true;
+
   systemd.user = {
     timers.nix-gc = {
       Unit.Description = "Garbage collect old Nix generations";
@@ -48,25 +52,23 @@ in {
     };
   };
 
-  # Package Installations
   home.packages = with pkgs; [
-    # opencode  # TODO: Uncomment when package definition is working
+    nerd-fonts.fira-code
+    nerd-fonts.meslo-lg
+    fontconfig
   ];
 
-  # --- Enable Home Manager ---
   programs.home-manager.enable = true;
 
-  # --- Editor Configurations ---
   editors = {
     enableVSCode = true;
     enableNeovim = true;
   };
 
-  # --- Kitty Terminal Configuration ---
   programs.kitty = {
     enable = true;
     settings = {
-      font_family = "FiraCode Nerd Font";  # Or "MesloLGS Nerd Font"
+      font_family = "FiraCode Nerd Font";
     };
   };
 }

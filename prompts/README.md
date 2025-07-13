@@ -12,18 +12,13 @@ This directory contains AI agent prompts and workflows for managing and maintain
 ## Usage
 
 These prompts are designed to work with:
-- **opencode** - Terminal-based AI assistant
-- **Gemini CLI** - Google's AI assistant
-- **Other AI agents** - Claude, ChatGPT, etc.
+- **AI agents** - Claude, ChatGPT, etc.
 
 ## Examples
 
 ```bash
-# Using with opencode
-opencode -p prompts/nix/audit.md
-
-# Using with Gemini CLI
-gemini -f prompts/workflows/check.md
+# Using with AI agents
+# Example: Copy the prompt content and use with your preferred AI assistant
 ```
 
 ## Available Commands

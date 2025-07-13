@@ -13,7 +13,6 @@
       resurrect
       sensible
       continuum
-      tmux-fzf
       yank
     ];
 
@@ -24,6 +23,7 @@
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'
+      set -g @continuum-save-interval '5'
 
       # Keep backtick key accessible
       bind-key "`" send-prefix
@@ -37,6 +37,9 @@
       bind-key v split-window -h
       unbind "\""
       bind s split-window
+
+      # === Popups ===
+      bind-key / display-popup -E -w 70% -h 60% -T "Shell" "zsh"
     '';
   };
 }
