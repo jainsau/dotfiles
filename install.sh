@@ -30,6 +30,8 @@ install_nix() {
         echo -e "${BLUE}Installing Nix package manager...${NC}"
         curl -L https://nixos.org/nix/install | sh -s -- --daemon
         # Ensure that `nix run` works by enabling flakes and nix-command
+        # Create the ~/.config/nix/ directory if it doesn't exist
+        mkdir -p "${HOME}/.config/nix"
         echo "experimental-features = nix-command flakes" > ${HOME}/.config/nix/nix.conf
         echo -e "${YELLOW}Please log out and log back in to reload your shell environment.${NC}"
     fi
@@ -37,6 +39,12 @@ install_nix() {
 
 # === Set Zsh as Default Shell ===
 make_zsh_default() {
+    # Check if zsh is available, if not, skip this step
+    if ! command -v zsh &> /dev/null; then
+        echo -e "${YELLOW}zsh not found. Skipping shell change. You can install zsh later and run this script again.${NC}"
+        return 0
+    fi
+
     local zsh_bin
     zsh_bin="$(command -v zsh)"
 

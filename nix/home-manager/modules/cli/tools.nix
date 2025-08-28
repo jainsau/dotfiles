@@ -1,22 +1,23 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    jq
-    yq
-    tokei
-    hyperfine
-    tealdeer
-    htop
-    pstree
-    fd
-    ripgrep
     bat
-    eza
-    dust
-    duf
-    procs
     bottom
+    duf
+    dust
+    eza
+    fd
+    htop
+    hyperfine
+    jq
+    opencode
+    procs
+    pstree
+    ripgrep
+    tealdeer
+    tokei
     tree
+    yq
     zoxide
   ];
 
@@ -44,4 +45,4 @@
       "--preview 'bat --color=always --style=numbers --line-range :500 {}'"
     ];
   };
-} 
+}

@@ -1,5 +1,5 @@
 # === BASE ZSH MODULE ===
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   # Enable command-not-found handler
   programs.command-not-found.enable = true;
@@ -14,7 +14,7 @@
     settings = {
       # A minimal, single-line prompt
       format = ''
-        $directory$git_branch$git_status$character'';
+        $os$username$hostname$directory$git_branch$git_status$character'';
 
       # Disable the newline at the start of the prompt
       add_newline = false;
@@ -24,12 +24,36 @@
         style = "bold blue";
         truncation_length = 5;
       };
+
+      # Configure the OS module (minimal and performant)
+      os = {
+        disabled = false;
+        format = "[$symbol](dimmed white)";
+        style = "dimmed white";
+      };
+
+      # Configure the username module (minimal and performant)
+      username = {
+        disabled = false;
+        format = "[$user](dimmed white)";
+        style_user = "dimmed white";
+        show_always = false;  # Only show when different from default
+      };
+
+      # Configure the hostname module (minimal and performant)
+      hostname = {
+        ssh_only = false;  # Show hostname even when not connected via SSH
+        format = "[$hostname](dimmed white) ";
+        disabled = false;
+        trim_at = ".";
+        style = "dimmed white";
+      };
     };
   };
 
   programs.zsh = {
     enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     initContent = ''
       # Nix
       if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
@@ -39,6 +63,10 @@
 
       # Homebrew (Apple Silicon)
       eval "$(/opt/homebrew/bin/brew shellenv)"
+
+      # Zsh Options
+      setopt AUTO_CD
+      setopt AUTO_PUSHD
 
       # Vi Mode & Cursor Shape Handling
       bindkey -v                            # Enable Vi mode
@@ -60,8 +88,6 @@
       zle -N insert-sudo
       bindkey "\e\e" insert-sudo
 
-
-
       # Hook DIRENV
       eval "$(direnv hook zsh)"
 
@@ -69,9 +95,10 @@
       autoload -U compinit
       compinit
 
-
-
-
+      # Custom functions
+      cs() {
+        curl "https://cheat.sh/$1"
+      }
     '';
 
     # Zsh Enhancements

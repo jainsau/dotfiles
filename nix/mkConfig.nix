@@ -1,6 +1,16 @@
 { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
 let
-  mkHomeConfig = name: cfg: settings: {
+  getHomeDirectory = system: username:
+    let
+      isDarwin = builtins.match ".*-darwin" system != null;
+    in
+    if isDarwin then "/Users/${username}" else "/home/${username}";
+
+  mkHomeConfig = name: cfg: settings:
+  let
+    homeDirectory = getHomeDirectory cfg.system settings.username;
+  in
+  {
     name = name;
     value = home-manager.lib.homeManagerConfiguration {
       pkgs = (import nixpkgs {
@@ -9,32 +19,37 @@ let
       });
       extraSpecialArgs = {
         inherit inputs;
-        inherit (settings) username homeDirectory gitUser gitEmail;
+        inherit (settings) username gitUser gitEmail;
+        inherit homeDirectory;
         system = cfg.system;
       };
       modules = [ "${self}/nix/home-manager" ];
     };
   };
 
-  mkDarwinConfig = name: cfg: settings: {
-    name = name;
-    value = nix-darwin.lib.darwinSystem {
-      inherit (cfg) system;
-      pkgs = (import nixpkgs {
+  mkDarwinConfig = name: cfg: settings:
+    let
+      homeDirectory = getHomeDirectory cfg.system settings.username;
+    in
+    {
+      name = name;
+      value = nix-darwin.lib.darwinSystem {
         inherit (cfg) system;
-        config.allowUnfree = true;
-      });
-      specialArgs = {
-        inherit inputs;
-        system = cfg.system;
-        inherit (settings) username;
+        pkgs = (import nixpkgs {
+          inherit (cfg) system;
+          config.allowUnfree = true;
+        });
+        specialArgs = {
+          inherit inputs;
+          system = cfg.system;
+          inherit (settings) username;
+        };
+        modules = [
+          { users.users.${settings.username}.home = settings.homeDirectory; }
+          "${self}/nix/darwin"
+        ];
       };
-      modules = [
-        { users.users.${settings.username}.home = settings.homeDirectory; }
-        "${self}/nix/darwin"
-      ];
     };
-  };
 
   makeConfigs = systems: type: mkFunc: settings: builtins.listToAttrs (
     builtins.filter (x: x != null) (
@@ -73,4 +88,4 @@ let
 in
 {
   inherit mkHomeConfig mkDarwinConfig makeConfigs switchPackages;
-} 
+}

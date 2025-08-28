@@ -1,4 +1,4 @@
-{ config, pkgs, ... }@args:
+{ config, pkgs, lib, ... }@args:
 
 let
   username = args.username;
@@ -33,21 +33,34 @@ in {
 
   fonts.fontconfig.enable = true;
 
-  systemd.user = {
+  # Linux-only services
+  systemd.user = lib.mkIf pkgs.stdenv.isLinux {
     timers.nix-gc = {
       Unit.Description = "Garbage collect old Nix generations";
       Timer = { OnCalendar = "weekly"; Persistent = true; };
       Install.WantedBy = [ "timers.target" ];
     };
+
     services = {
       nix-gc.Service.ExecStart = "${pkgs.nix}/bin/nix-collect-garbage -d";
+
       podman = {
-        enable = true;
-        description = "Podman API Socket";
-        wantedBy = [ "default.target" ];
-        serviceConfig = {
+        Unit.Description = "Podman API Socket";
+        Install.WantedBy = [ "default.target" ];
+        Service = {
           ExecStart = "${pkgs.podman}/bin/podman system service --time=0";
         };
+      };
+    };
+  };
+
+  # macOS-only services
+  launchd.agents = lib.mkIf pkgs.stdenv.isDarwin {
+    nix-gc = {
+      enable = true;
+      config = {
+        ProgramArguments = [ "${pkgs.nix}/bin/nix-collect-garbage" "-d" ];
+        StartCalendarInterval = { Weekday = 0; Hour = 3; Minute = 0; };
       };
     };
   };

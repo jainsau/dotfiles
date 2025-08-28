@@ -20,7 +20,7 @@
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, ... }:
     let
       systems = import ./nix/systems.nix;
-      userSettings = import ./nix/user.nix;
+      userSettings = import ./.user.nix;
       mkConfig = import ./nix/mkConfig.nix inputs;
       homeConfigs = mkConfig.makeConfigs systems "home" mkConfig.mkHomeConfig userSettings;
       darwinConfigs = mkConfig.makeConfigs systems "darwin" mkConfig.mkDarwinConfig userSettings;

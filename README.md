@@ -72,22 +72,3 @@ User-specific settings (such as username, home directory, git identity) are defi
 }
 ```
 
----
-
-## 🤖 AI Agent Prompts
-
-The `prompts/` directory contains prompts for AI agents to help maintain this project.
-
-### Usage Examples
-
-```bash
-# Copy prompt content and use with your preferred AI assistant
-# Example: prompts/nix/audit.md for package reviews
-# Example: prompts/workflows/check.md for module structure audits
-```
-
----
-
-## 🙏 Credits
-
-This project was inspired by the robust and declarative nature of Nix and the broader Nix community.
