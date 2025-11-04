@@ -4,6 +4,23 @@ This repository contains my personal dotfiles, managed with **Nix** and **Home M
 
 ---
 
+## 📝 Neovim: adding LSPs and linters
+
+This repo symlinks `nix/home-manager/editors/nvim` into `~/.config/nvim`, so edits to those Lua files apply immediately on the next `nvim` start (no rebuild needed).
+
+- Add an LSP server:
+  - Edit `nix/home-manager/editors/nvim/lua/plugins/mason.lua` and add the server to the `servers` table.
+  - Mason will auto-install servers/tools declared via `ensure_installed` on first launch.
+
+- Add a linter:
+  - Edit `nix/home-manager/editors/nvim/lua/plugins/lint.lua` and add the linter to `linters_by_ft`.
+  - If the linter is an external CLI (e.g., `markdownlint-cli2`), install it via Nix by adding it to `home.packages` in `nix/home-manager/default.nix`.
+
+- When do you need to rebuild?
+  - Editing Lua config: no rebuild; restart Neovim.
+  - Adding external binaries via Nix: run `home-manager switch --flake .`.
+  - Updating to newer package versions: run `nix flake update` first, then switch.
+
 ## ✨ Features
 
 - **Declarative & Reproducible**: Built on [Nix](https://nixos.org/) and [Home Manager](https://github.com/nix-community/home-manager), ensuring a consistent setup across machines.
@@ -56,6 +73,21 @@ dotfiles/
 4.  **Apply Changes**: After editing your configuration, apply the changes with:
     - `nix run .#hma-switch` (for Home Manager)
     - `nix run .#dma-switch` (for Darwin)
+
+---
+
+## 🔄 Updating packages
+
+This repo uses flakes. Switching uses the versions pinned in `flake.lock`.
+
+- To switch with current pins:
+  - Darwin: `darwin-rebuild switch --flake .`
+  - Home Manager: `home-manager switch --flake .`
+
+- To update to newer package versions:
+  - All inputs: `nix flake update`
+  - Specific input (e.g., nixpkgs): `nix flake update --update-input nixpkgs`
+  - Then run the switch command again.
 
 ---
 

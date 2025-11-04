@@ -35,6 +35,7 @@
     casks = [
       "utm"
       "ollama"
+      "obsidian"
     ];
     brews = [
       "lima"

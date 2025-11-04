@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    gh
     bat
     bottom
     duf
@@ -10,6 +11,8 @@
     htop
     hyperfine
     jq
+    gemini-cli
+    markdownlint-cli2
     opencode
     procs
     pstree
