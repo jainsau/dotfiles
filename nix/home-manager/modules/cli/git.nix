@@ -5,14 +5,15 @@ let
   gitEmail = args.gitEmail;
 in {
   home.packages = with pkgs; [
-    delta
     lazygit
   ];
 
   programs.git = {
     enable = true;
-    userName = gitUser;
-    userEmail = gitEmail;
+    settings.user = {
+      name = gitUser;
+      email = gitEmail;
+    };
   };
 
   home.shellAliases = {
@@ -29,7 +30,7 @@ in {
     lg = "lazygit";
   };
 
-  programs.git.delta = {
+  programs.delta = {
     enable = true;
     options = {
       navigate = true;

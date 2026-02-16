@@ -36,6 +36,7 @@
       "utm"
       "ollama"
       "obsidian"
+      "multipass"
     ];
     brews = [
       "lima"
