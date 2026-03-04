@@ -11,5 +11,7 @@
     watchexec
     entr
     nil
+    cfssl
+    k9s
   ];
 }

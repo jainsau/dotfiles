@@ -28,7 +28,6 @@ in {
   home.shellAliases = {
     serve = "python3 -m http.server";
     myip = "curl -s https://httpbin.org/ip | jq -r .origin";
-    cs = "curl https://cheat.sh/{$1}";
   };
 
   fonts.fontconfig.enable = true;
