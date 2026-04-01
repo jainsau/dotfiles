@@ -12,6 +12,7 @@
     hyperfine
     jq
     gemini-cli
+    claude-code
     markdownlint-cli2
     opencode
     procs
