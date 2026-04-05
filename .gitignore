@@ -1,6 +1,7 @@
 # Nix environment
 .direnv
 result
+result/
 
 
 # Home Manager

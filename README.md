@@ -1,12 +1,12 @@
 # Saurabh's Dotfiles
 
-This repository contains my personal dotfiles, managed with **Nix** and **Home Manager** to create a reproducible, declarative, and highly modular development environment. It is tailored for macOS and includes configurations for Zsh, Neovim, and a wide array of command-line tools.
+This repository contains my personal dotfiles, managed with **Nix** and **Home Manager** to create a reproducible, declarative, and highly modular development environment. It targets **macOS** (Darwin via nix-darwin and standalone Home Manager) and **Linux** (standalone Home Manager, e.g. `hlx-switch` / `hla-switch`), with Zsh, Neovim, and a wide array of command-line tools.
 
 ---
 
 ## 📝 Neovim: adding LSPs and linters
 
-This repo symlinks `nix/home-manager/editors/nvim` into `~/.config/nvim`, so edits to those Lua files apply immediately on the next `nvim` start (no rebuild needed).
+Home Manager installs Neovim config from `nix/home-manager/editors/nvim` by copying that directory into the Nix store and linking `~/.config/nvim` to that snapshot (it is not a live symlink to your git checkout).
 
 - Add an LSP server:
   - Edit `nix/home-manager/editors/nvim/lua/plugins/mason.lua` and add the server to the `servers` table.
@@ -16,10 +16,18 @@ This repo symlinks `nix/home-manager/editors/nvim` into `~/.config/nvim`, so edi
   - Edit `nix/home-manager/editors/nvim/lua/plugins/lint.lua` and add the linter to `linters_by_ft`.
   - If the linter is an external CLI (e.g., `markdownlint-cli2`), install it via Nix by adding it to `home.packages` in `nix/home-manager/default.nix`.
 
-- When do you need to rebuild?
-  - Editing Lua config: no rebuild; restart Neovim.
-  - Adding external binaries via Nix: run `home-manager switch --flake .`.
-  - Updating to newer package versions: run `nix flake update` first, then switch.
+- When do you need to switch / rebuild?
+  - Editing Lua (or any file under that `nvim` tree): run **Home Manager switch** (e.g. `nix run .#hma-switch` or `nix run .#hlx-switch`), then **restart Neovim** so it loads the new store path.
+  - Adding external binaries via Nix: same—Home Manager switch.
+  - Updating to newer package versions: run `nix flake update` (or update a specific input), then switch again.
+
+---
+
+## 🐚 Zsh and Homebrew
+
+Zsh init loads **Homebrew** only when a `brew` binary exists: **`/opt/homebrew/bin/brew`** (Apple Silicon default prefix) or **`/usr/local/bin/brew`** (Intel Mac default prefix). On Linux, neither path is used, so no `brew shellenv` runs there. See `nix/home-manager/modules/shell/zsh.nix`.
+
+---
 
 ## ✨ Features
 
@@ -71,8 +79,9 @@ dotfiles/
     ```
 3.  **Edit User Settings**: If needed, edit your user-specific settings in `nix/user.nix`.
 4.  **Apply Changes**: After editing your configuration, apply the changes with:
-    - `nix run .#hma-switch` (for Home Manager)
-    - `nix run .#dma-switch` (for Darwin)
+    - **macOS — nix-darwin**: `nix run .#dma-switch` (Apple Silicon) or `nix run .#dmx-switch` (Intel), as appropriate for your machine (`nix/systems.nix`).
+    - **macOS — Home Manager only**: `nix run .#hma-switch` or `nix run .#hmx-switch`.
+    - **Linux — Home Manager**: `nix run .#hlx-switch` (x86_64) or `nix run .#hla-switch` (aarch64).
 
 ---
 
@@ -103,4 +112,6 @@ User-specific settings (such as username, home directory, git identity) are defi
   gitEmail = "your.email@example.com";
 }
 ```
+
+**Home directory on Linux:** Darwin configurations use `homeDirectory` from this file. Linux Home Manager configurations use **`/home/<username>`** as set in `nix/mkConfig.nix` (see `getHomeDirectory`). If your Linux home path or username differs, adjust `nix/user.nix` and/or `nix/mkConfig.nix` / `nix/systems.nix` accordingly.
 

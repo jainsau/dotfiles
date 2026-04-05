@@ -61,8 +61,14 @@
       fi
       # End Nix
 
-      # Homebrew (Apple Silicon)
-      eval "$(/opt/homebrew/bin/brew shellenv)"
+      # Homebrew (skip on Linux and when not installed)
+      if [ -x /opt/homebrew/bin/brew ]; then
+        # Apple Silicon (default prefix)
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      elif [ -x /usr/local/bin/brew ]; then
+        # Intel Mac (default prefix)
+        eval "$(/usr/local/bin/brew shellenv)"
+      fi
 
       # Zsh Options
       setopt AUTO_CD
