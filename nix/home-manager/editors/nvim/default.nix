@@ -6,6 +6,8 @@ with lib;
       enable = true;
       vimAlias = true;
       viAlias = true;
+      withPython3 = true;
+      withRuby = true;
 
       # Add additional packages you need for your config
       extraPackages = with pkgs; [

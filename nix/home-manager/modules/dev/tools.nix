@@ -6,7 +6,7 @@
     rustc
     go
     nodejs
-    nodePackages.markdownlint-cli2
+    markdownlint-cli2
     glow
     watchexec
     entr

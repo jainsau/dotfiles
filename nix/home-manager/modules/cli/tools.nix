@@ -11,8 +11,10 @@
     htop
     hyperfine
     jq
+    minikube
     gemini-cli
     claude-code
+    codex
     markdownlint-cli2
     opencode
     procs

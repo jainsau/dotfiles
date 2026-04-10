@@ -14,6 +14,7 @@ in {
       name = gitUser;
       email = gitEmail;
     };
+    signing.format = null;
   };
 
   home.shellAliases = {

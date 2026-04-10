@@ -12,7 +12,7 @@ in {
 
   home.username = username;
   home.homeDirectory = homeDirectory;
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";

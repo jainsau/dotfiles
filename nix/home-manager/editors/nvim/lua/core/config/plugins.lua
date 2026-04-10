@@ -15,6 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Install and configure plugins
 require("lazy").setup(
   {
+    lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
     spec = {{ import = "plugins" }},
     defaults = {
       version = "*", -- Try installing the latest stable versions of plugins that support semver
