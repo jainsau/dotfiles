@@ -20,7 +20,17 @@
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, ... }:
     let
       systems = import ./nix/systems.nix;
-      userSettings = import ./nix/user.nix;
+      baseUserSettings = import ./nix/user.nix;
+      localUserConfigPath =
+        let
+          fromEnv = builtins.getEnv "DOTFILES_USER_CONFIG";
+          pwd = builtins.getEnv "PWD";
+          fromPwd = if pwd == "" then "" else "${pwd}/.user.nix";
+          candidate = if fromEnv != "" then fromEnv else fromPwd;
+        in
+        if candidate != "" && builtins.pathExists candidate then builtins.toPath candidate else null;
+      localUserSettings = if localUserConfigPath == null then { } else import localUserConfigPath;
+      userSettings = baseUserSettings // localUserSettings;
       mkConfig = import ./nix/mkConfig.nix inputs;
       homeConfigs = mkConfig.makeConfigs systems "home" mkConfig.mkHomeConfig userSettings;
       darwinConfigs = mkConfig.makeConfigs systems "darwin" mkConfig.mkDarwinConfig userSettings;

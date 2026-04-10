@@ -1,6 +1,6 @@
 {
-  username = "saurabh";
-  homeDirectory = "/Users/saurabh";
-  gitUser = "Saurabh";
-  gitEmail = "saurabh_jain2011@pgp.isb.edu";
+  username = "jane";
+  homeDirectory = "/Users/jane";
+  gitUser = "Jane Doe";
+  gitEmail = "jane.doe@acme.example";
 }

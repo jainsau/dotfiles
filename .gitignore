@@ -35,6 +35,9 @@ result/
 *~
 .*.un~
 
+# Local user override
+.user.nix
+
 # OS generated files
 .DS_Store
 Thumbs.db

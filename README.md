@@ -37,7 +37,7 @@ Zsh init loads **Homebrew** only when a `brew` binary exists: **`/opt/homebrew/b
 - **Customized Editors**: Tailored configurations for Neovim (based on a streamlined Lua setup) and VSCode.
 - **Rich Toolset**: Includes curated configurations for dozens of popular CLI and development tools like `eza`, `bat`, `fzf`, `git`, `delta`, and `lazygit`.
 - **Modular config logic** lives in `nix/` (parameterized by settings)
-- **Pure flake** (`flake.nix`) with user settings imported from `nix/user.nix` for reproducibility.
+- **Template + local override**: committed defaults live in `nix/user.nix`, while an optional local `.user.nix` can override them for personal machine-specific values.
 
 ---
 
@@ -49,9 +49,10 @@ The configuration is built around a flake-based Nix setup. The core logic reside
 dotfiles/
 ├── flake.nix        # Main Nix Flake entrypoint
 ├── install.sh       # Installation script
+├── .user.nix        # Optional local override (gitignored)
 ├── prompts/         # AI agent prompts and workflows
 └── nix/
-    ├── user.nix     # User-specific settings
+    ├── user.nix     # Committed template/default user settings
     ├── mkConfig.nix # Configuration generation logic
     ├── systems.nix  # System definitions (Darwin/Home Manager)
     ├── darwin/      # macOS-specific system configurations
@@ -77,11 +78,19 @@ dotfiles/
     ```bash
     ./install.sh
     ```
-3.  **Edit User Settings**: If needed, edit your user-specific settings in `nix/user.nix`.
+3.  **Set Your Local User Settings**: Keep the committed template in `nix/user.nix` generic. Put your real identity in a local `.user.nix` at the repo root:
+    ```nix
+    {
+      username = "your_username";
+      homeDirectory = "/Users/your_username";
+      gitUser = "Your Name";
+      gitEmail = "your.email@example.com";
+    }
+    ```
 4.  **Apply Changes**: After editing your configuration, apply the changes with:
-    - **macOS — nix-darwin**: `nix run .#dma-switch` (Apple Silicon) or `nix run .#dmx-switch` (Intel), as appropriate for your machine (`nix/systems.nix`).
-    - **macOS — Home Manager only**: `nix run .#hma-switch` or `nix run .#hmx-switch`.
-    - **Linux — Home Manager**: `nix run .#hlx-switch` (x86_64) or `nix run .#hla-switch` (aarch64).
+    - **macOS — nix-darwin**: `nix run --impure .#dma-switch` (Apple Silicon) or `nix run --impure .#dmx-switch` (Intel), as appropriate for your machine (`nix/systems.nix`).
+    - **macOS — Home Manager only**: `nix run --impure .#hma-switch` or `nix run --impure .#hmx-switch`.
+    - **Linux — Home Manager**: `nix run --impure .#hlx-switch` (x86_64) or `nix run --impure .#hla-switch` (aarch64).
 
 ---
 
@@ -102,7 +111,25 @@ This repo uses flakes. Switching uses the versions pinned in `flake.lock`.
 
 ## 🔧 User Settings
 
-User-specific settings (such as username, home directory, git identity) are defined in `nix/user.nix`. Edit this file to personalize your setup:
+This repo keeps personal identity out of git by separating committed defaults from local overrides:
+
+- `nix/user.nix` is the committed template with generic values.
+- `.user.nix` is an optional local override file at the repo root. It is ignored by git and should hold your real username, home directory, and git identity.
+
+The override is loaded only during impure evaluation, so use `nix run --impure ...` when switching.
+
+Committed template example in `nix/user.nix`:
+
+```nix
+{
+  username = "jane";
+  homeDirectory = "/Users/jane";
+  gitUser = "Jane Doe";
+  gitEmail = "jane.doe@acme.example";
+}
+```
+
+Local override example in `.user.nix`:
 
 ```nix
 {
@@ -113,5 +140,4 @@ User-specific settings (such as username, home directory, git identity) are defi
 }
 ```
 
-**Home directory on Linux:** Darwin configurations use `homeDirectory` from this file. Linux Home Manager configurations use **`/home/<username>`** as set in `nix/mkConfig.nix` (see `getHomeDirectory`). If your Linux home path or username differs, adjust `nix/user.nix` and/or `nix/mkConfig.nix` / `nix/systems.nix` accordingly.
-
+You can also point to a different local override file by setting `DOTFILES_USER_CONFIG` to an absolute path before running the switch command.

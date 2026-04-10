@@ -73,22 +73,22 @@ show_post_bootstrap_instructions() {
         Darwin)
             case "$arch" in
                 arm64)
-                    echo -e "${BLUE}  nix run .#dma-switch${NC}"
-                    echo -e "${BLUE}  nix run .#hma-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#dma-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#hma-switch${NC}"
                     ;;
                 x86_64)
-                    echo -e "${BLUE}  nix run .#dmx-switch${NC}"
-                    echo -e "${BLUE}  nix run .#hmx-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#dmx-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#hmx-switch${NC}"
                     ;;
             esac
             ;;
         Linux)
             case "$arch" in
                 aarch64)
-                    echo -e "${BLUE}  nix run .#hla-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#hla-switch${NC}"
                     ;;
                 x86_64)
-                    echo -e "${BLUE}  nix run .#hlx-switch${NC}"
+                    echo -e "${BLUE}  nix run --impure .#hlx-switch${NC}"
                     ;;
             esac
             ;;

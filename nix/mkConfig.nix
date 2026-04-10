@@ -72,10 +72,14 @@ let
           if cfg.type == "darwin" then
             pkgsForSystem.writeShellApplication {
               name = "${name}-switch";
-              text = "exec sudo ${inputs.nix-darwin.packages.${cfg.system}.darwin-rebuild}/bin/darwin-rebuild switch --flake .#${name}";
+              text = "exec sudo ${inputs.nix-darwin.packages.${cfg.system}.darwin-rebuild}/bin/darwin-rebuild switch --impure --flake .#${name}";
             }
           else if cfg.type == "home" then
-            (makeConfigs systems "home" mkHomeConfig settings).${name}.activationPackage
+            pkgsForSystem.writeShellApplication {
+              name = "${name}-switch";
+              runtimeInputs = [ home-manager.packages.${cfg.system}.home-manager ];
+              text = "exec home-manager switch --impure --flake .#${name}";
+            }
           else throw "Unknown type: ${cfg.type}";
       in acc // {
         ${cfg.system} = (acc.${cfg.system} or {}) // {
