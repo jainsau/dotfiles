@@ -1,11 +1,6 @@
 # === BASE ZSH MODULE ===
 { config, pkgs, ... }:
 {
-  # Enable command-not-found handler
-  programs.command-not-found.enable = true;
-
-
-
   # Starship Prompt Configuration
   programs.starship = {
     enable = true;
@@ -70,6 +65,9 @@
         eval "$(/usr/local/bin/brew shellenv)"
       fi
 
+      # Kiro CLI pre block. Keep at the top of this file.
+      [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
       # Zsh Options
       setopt AUTO_CD
       setopt AUTO_PUSHD
@@ -94,17 +92,16 @@
       zle -N insert-sudo
       bindkey "\e\e" insert-sudo
 
-      # Hook DIRENV
-      eval "$(direnv hook zsh)"
-
-      # Initialize completions
-      autoload -U compinit
-      compinit
+      # Local user binaries (e.g. kiro-cli self-installs here)
+      export PATH="$HOME/.local/bin:$PATH"
 
       # Custom functions
       cs() {
         curl "https://cheat.sh/$1"
       }
+
+      # Kiro CLI post block. Keep at the bottom of this file.
+      [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
     '';
 
     # Zsh Enhancements
