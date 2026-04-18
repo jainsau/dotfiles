@@ -61,6 +61,37 @@ make_zsh_default() {
     fi
 }
 
+# === Setup Zsh Sourcing ===
+# Keep ~/.zshrc mutable so external tools can modify it.
+# Home Manager writes managed config to ~/.config/zsh/.zshrc; we source it from ~/.zshrc.
+setup_zsh_sourcing() {
+    local target="$HOME/.zshrc"
+    local managed="$HOME/.config/zsh/.zshrc"
+    local source_line="[[ -f \"$managed\" ]] && source \"$managed\""
+    local marker="# --- managed config (do not remove) ---"
+
+    # Reclaim ~/.zshenv if HM owns it (removes ZDOTDIR redirect)
+    if [[ -L "$HOME/.zshenv" ]] && [[ "$(readlink "$HOME/.zshenv")" == /nix/store/* ]]; then
+        echo -e "${BLUE}Reclaiming ~/.zshenv from Home Manager...${NC}"
+        rm "$HOME/.zshenv"
+    fi
+
+    # Create if missing
+    if [[ ! -f "$target" ]]; then
+        echo -e "${BLUE}Creating $target...${NC}"
+        printf '%s\n%s\n' "$marker" "$source_line" > "$target"
+        return
+    fi
+
+    # Ensure source line is present
+    if ! grep -qF "$source_line" "$target"; then
+        echo -e "${BLUE}Adding managed sourcing to $target...${NC}"
+        printf '\n%s\n%s\n' "$marker" "$source_line" >> "$target"
+    else
+        echo -e "${GREEN}$target already sources managed config.${NC}"
+    fi
+}
+
 # === Show Post-Bootstrap Instructions ===
 show_post_bootstrap_instructions() {
     local os arch
@@ -99,6 +130,7 @@ show_post_bootstrap_instructions() {
 install_kitty
 install_nix
 make_zsh_default
+setup_zsh_sourcing
 show_post_bootstrap_instructions
 
 echo -e "${GREEN}Bootstrap process completed successfully.${NC}"

@@ -1,5 +1,5 @@
 # === BASE ZSH MODULE ===
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   # Starship Prompt Configuration
   programs.starship = {
@@ -45,6 +45,13 @@
       };
     };
   };
+
+  # Override ~/.zshenv: source HM session vars but don't set ZDOTDIR.
+  # This lets zsh read ~/.zshrc (mutable, managed by install.sh) which
+  # sources ~/.config/zsh/.zshrc (immutable, managed by HM via dotDir).
+  home.file.".zshenv".text = lib.mkForce ''
+    . "${config.home.homeDirectory}/.nix-profile/etc/profile.d/hm-session-vars.sh"
+  '';
 
   programs.zsh = {
     enable = true;
