@@ -102,6 +102,9 @@
       # Local user binaries (e.g. kiro-cli self-installs here)
       export PATH="$HOME/.local/bin:$PATH"
 
+      # pay-respects: press f to fix last command
+      eval "$(pay-respects zsh --alias f)"
+
       # Custom functions
       cs() {
         curl "https://cheat.sh/$1"

@@ -3,10 +3,20 @@
 let
   gitUser = args.gitUser;
   gitEmail = args.gitEmail;
+  gpgKey = args.gpgKey;
 in {
   home.packages = with pkgs; [
     lazygit
   ];
+
+  programs.gpg.enable = true;
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 3600;
+    maxCacheTtl = 7200;
+    pinentry.package = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-curses;
+  };
 
   programs.git = {
     enable = true;
@@ -14,7 +24,11 @@ in {
       name = gitUser;
       email = gitEmail;
     };
-    signing.format = null;
+    signing = {
+      format = "openpgp";
+      signByDefault = true;
+      key = gpgKey;
+    };
   };
 
   home.shellAliases = {

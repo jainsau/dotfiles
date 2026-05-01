@@ -19,7 +19,7 @@ let
       });
       extraSpecialArgs = {
         inherit inputs;
-        inherit (settings) username gitUser gitEmail;
+        inherit (settings) username gitUser gitEmail gpgKey;
         inherit homeDirectory;
         system = cfg.system;
       };

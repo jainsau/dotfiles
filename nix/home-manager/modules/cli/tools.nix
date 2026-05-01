@@ -17,6 +17,7 @@
     codex
     markdownlint-cli2
     opencode
+    pay-respects
     procs
     pstree
     ripgrep
