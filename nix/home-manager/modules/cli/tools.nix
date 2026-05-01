@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
     gh
@@ -11,7 +11,6 @@
     htop
     hyperfine
     jq
-    minikube
     gemini-cli
     claude-code
     codex
@@ -26,6 +25,8 @@
     tree
     yq
     zoxide
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    k3s
   ];
 
   home.shellAliases = {

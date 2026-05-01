@@ -21,8 +21,8 @@ with lib;
     };
 
     home.shellAliases = {
-      # Vim replacement
       vim = "nvim";
+      v = "vim";
     };
 
     # Symlink ./config to ~/.config/nvim

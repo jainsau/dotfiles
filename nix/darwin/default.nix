@@ -4,6 +4,9 @@
 {
   imports = [ ];
 
+  # --- Multipass alias ---
+  environment.shellAliases.m = "multipass";
+
   # --- Set build group ID for nixbld ---
   ids.gids.nixbld = 350;
 

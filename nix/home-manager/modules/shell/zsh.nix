@@ -110,6 +110,11 @@
         curl "https://cheat.sh/$1"
       }
 
+      # kubectl shortcut with shell completion
+      source <(kubectl completion zsh)
+      alias k=kubectl
+      compdef k=kubectl
+
       # Kiro CLI post block. Keep at the bottom of this file.
       [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
     '';
