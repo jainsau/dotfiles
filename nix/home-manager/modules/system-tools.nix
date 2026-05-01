@@ -1,12 +1,27 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
-    nmap
-    bandwhich
-    iftop
+    # System monitoring
     lsof
     ncdu
     podman
+
+    # Network diagnostics (cross-platform)
+    nmap
+    bandwhich
+    iftop
+    mtr
+    whois
+    dig
+    ipcalc
+    socat
+    trippy
+    termshark
+    curl
+    wget
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    tcpdump
+    traceroute
   ];
 
   home.shellAliases = {

@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     bun
     cargo
+    clang
     rustc
     go
     nodejs
