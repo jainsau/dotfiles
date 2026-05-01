@@ -11,6 +11,7 @@
     htop
     hyperfine
     jq
+    kiro-cli
     gemini-cli
     claude-code
     codex

@@ -73,7 +73,11 @@
       fi
 
       # Kiro CLI pre block. Keep at the top of this file.
-      [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]]; then
+        builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+      elif [[ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh" ]]; then
+        builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh"
+      fi
 
       # Zsh Options
       setopt AUTO_CD
@@ -116,7 +120,11 @@
       compdef k=kubectl
 
       # Kiro CLI post block. Keep at the bottom of this file.
-      [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
+        builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+      elif [[ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh" ]]; then
+        builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh"
+      fi
     '';
 
     # Zsh Enhancements
