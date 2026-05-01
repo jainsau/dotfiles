@@ -33,6 +33,7 @@
     };
 
     casks = [
+      "maccy"
       "utm"
       "ollama"
       "obsidian"

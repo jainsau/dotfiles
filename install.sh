@@ -37,6 +37,30 @@ install_nix() {
     fi
 }
 
+# === Install Zsh ===
+install_zsh() {
+    if command -v zsh &> /dev/null; then
+        echo -e "${GREEN}Zsh is already installed.${NC}"
+        return 0
+    fi
+
+    echo -e "${BLUE}Installing Zsh...${NC}"
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+        # macOS ships with zsh; if missing, install via Nix
+        nix-env -iA nixpkgs.zsh
+    elif command -v apt-get &> /dev/null; then
+        sudo apt-get update && sudo apt-get install -y zsh
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y zsh
+    elif command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm zsh
+    else
+        echo -e "${YELLOW}Could not detect package manager. Install zsh manually.${NC}"
+        return 1
+    fi
+    echo -e "${GREEN}Zsh installed.${NC}"
+}
+
 # === Set Zsh as Default Shell ===
 make_zsh_default() {
     # Check if zsh is available, if not, skip this step
@@ -129,6 +153,7 @@ show_post_bootstrap_instructions() {
 # === MAIN BOOTSTRAP SEQUENCE ===
 install_kitty
 install_nix
+install_zsh
 make_zsh_default
 setup_zsh_sourcing
 show_post_bootstrap_instructions
