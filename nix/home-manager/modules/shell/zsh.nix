@@ -115,9 +115,11 @@
       }
 
       # kubectl shortcut with shell completion
-      source <(kubectl completion zsh)
-      alias k=kubectl
-      compdef k=kubectl
+      if command -v kubectl &>/dev/null; then
+        source <(kubectl completion zsh)
+        alias k=kubectl
+        compdef k=kubectl
+      fi
 
       # Kiro CLI post block. Keep at the bottom of this file.
       if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
