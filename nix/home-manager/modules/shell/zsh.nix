@@ -95,13 +95,24 @@
       zle -N zle-keymap-select
       echo -ne '\e[5 q'                     # Set beam cursor on startup
 
-      # Prepend sudo to current command line (ESC ESC)
+      # Edit command line in $EDITOR (Ctrl+X Ctrl+E in insert mode, v in normal mode)
+      autoload -Uz edit-command-line
+      zle -N edit-command-line
+      bindkey '^X^E' edit-command-line
+      bindkey -M vicmd 'v' edit-command-line
+
+      # Prepend sudo to current/previous command (Ctrl+S)
       insert-sudo() {
-          zle beginning-of-line;
-          zle -U "sudo "
+        if [[ -z "$BUFFER" ]]; then
+          BUFFER="sudo $(fc -ln -1)"
+        elif [[ "$BUFFER" != sudo\ * ]]; then
+          BUFFER="sudo $BUFFER"
+        fi
+        CURSOR=$#BUFFER
       }
       zle -N insert-sudo
-      bindkey "\e\e" insert-sudo
+      stty -ixon
+      bindkey '^S' insert-sudo
 
       # Local user binaries (e.g. kiro-cli self-installs here)
       export PATH="$HOME/.local/bin:$PATH"
