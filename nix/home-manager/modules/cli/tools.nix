@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     gh
@@ -26,8 +26,7 @@
     tree
     yq
     zoxide
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
-    k3s
+    kubectl
   ];
 
   home.shellAliases = {
