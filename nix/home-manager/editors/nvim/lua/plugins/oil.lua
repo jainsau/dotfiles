@@ -24,6 +24,8 @@ end
 return {
   'stevearc/oil.nvim',
   config = oil_config,
+  ---@module 'oil'
+  ---@type oil.SetupOpts
   opts = {},
   -- Optional dependencies
   dependencies = { 'nvim-tree/nvim-web-devicons' },

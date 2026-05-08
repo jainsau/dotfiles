@@ -1,54 +1,7 @@
-# === BASE ZSH MODULE ===
+# === CORE ZSH CONFIG ===
 { config, pkgs, lib, ... }:
 {
-  # Starship Prompt Configuration
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    # For full configuration options, see: https://starship.rs/config/
-    settings = {
-      # A minimal, single-line prompt
-      format = ''
-        $os$username$hostname$directory$git_branch$git_status$character'';
-
-      # Disable the newline at the start of the prompt
-      add_newline = false;
-
-      # Configure the directory module
-      directory = {
-        style = "bold blue";
-        truncation_length = 5;
-      };
-
-      # Configure the OS module (minimal and performant)
-      os = {
-        disabled = false;
-        format = "[$symbol](dimmed white)";
-        style = "dimmed white";
-      };
-
-      # Configure the username module (minimal and performant)
-      username = {
-        disabled = false;
-        format = "[$user](dimmed white)";
-        style_user = "dimmed white";
-        show_always = false;  # Only show when different from default
-      };
-
-      # Configure the hostname module (minimal and performant)
-      hostname = {
-        ssh_only = false;  # Show hostname even when not connected via SSH
-        format = "[$hostname](dimmed white) ";
-        disabled = false;
-        trim_at = ".";
-        style = "dimmed white";
-      };
-    };
-  };
-
   # Override ~/.zshenv: source HM session vars but don't set ZDOTDIR.
-  # This lets zsh read ~/.zshrc (mutable, managed by install.sh) which
-  # sources ~/.config/zsh/.zshrc (immutable, managed by HM via dotDir).
   home.file.".zshenv".text = lib.mkForce ''
     . "${config.home.homeDirectory}/.nix-profile/etc/profile.d/hm-session-vars.sh"
   '';
@@ -65,10 +18,8 @@
 
       # Homebrew (skip on Linux and when not installed)
       if [ -x /opt/homebrew/bin/brew ]; then
-        # Apple Silicon (default prefix)
         eval "$(/opt/homebrew/bin/brew shellenv)"
       elif [ -x /usr/local/bin/brew ]; then
-        # Intel Mac (default prefix)
         eval "$(/usr/local/bin/brew shellenv)"
       fi
 
@@ -83,54 +34,8 @@
       setopt AUTO_CD
       setopt AUTO_PUSHD
 
-      # Vi Mode & Cursor Shape Handling
-      bindkey -v                            # Enable Vi mode
-      export KEYTIMEOUT=1                   # Reduce delay in mode switching
-      function zle-keymap-select {          # Change cursor shape based on mode
-        case $KEYMAP in
-          vicmd) echo -ne '\e[1 q' ;;       # Block cursor in normal mode
-          viins|main) echo -ne '\e[5 q' ;;  # Beam cursor in insert mode
-        esac
-      }
-      zle -N zle-keymap-select
-      echo -ne '\e[5 q'                     # Set beam cursor on startup
-
-      # Edit command line in $EDITOR (Ctrl+X Ctrl+E in insert mode, v in normal mode)
-      autoload -Uz edit-command-line
-      zle -N edit-command-line
-      bindkey '^X^E' edit-command-line
-      bindkey -M vicmd 'v' edit-command-line
-
-      # Prepend sudo to current/previous command (Ctrl+S)
-      insert-sudo() {
-        if [[ -z "$BUFFER" ]]; then
-          BUFFER="sudo $(fc -ln -1)"
-        elif [[ "$BUFFER" != sudo\ * ]]; then
-          BUFFER="sudo $BUFFER"
-        fi
-        CURSOR=$#BUFFER
-      }
-      zle -N insert-sudo
-      stty -ixon
-      bindkey '^S' insert-sudo
-
-      # Local user binaries (e.g. kiro-cli self-installs here)
+      # Local user binaries
       export PATH="$HOME/.local/bin:$PATH"
-
-      # pay-respects: press f to fix last command
-      eval "$(pay-respects zsh --alias f)"
-
-      # Custom functions
-      cs() {
-        curl "https://cheat.sh/$1"
-      }
-
-      # kubectl shortcut with shell completion
-      if command -v kubectl &>/dev/null; then
-        source <(kubectl completion zsh)
-        alias k=kubectl
-        compdef k=kubectl
-      fi
 
       # Kiro CLI post block. Keep at the bottom of this file.
       if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
@@ -140,7 +45,6 @@
       fi
     '';
 
-    # Zsh Enhancements
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
@@ -168,9 +72,8 @@
     ];
   };
 
-  # === NAVIGATION ALIASES ===
+  # Navigation aliases
   home.shellAliases = {
-    # Directory navigation shortcuts
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";

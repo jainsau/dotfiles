@@ -48,21 +48,21 @@ The configuration is built around a flake-based Nix setup. The core logic reside
 ```
 dotfiles/
 ├── flake.nix        # Main Nix Flake entrypoint
-├── install.sh       # Installation script
+├── install.sh       # Two-phase bootstrap (install Nix → setup shell)
 ├── .user.nix        # Optional local override (gitignored)
-├── prompts/         # AI agent prompts and workflows
 └── nix/
     ├── user.nix     # Committed template/default user settings
     ├── mkConfig.nix # Configuration generation logic
     ├── systems.nix  # System definitions (Darwin/Home Manager)
     ├── darwin/      # macOS-specific system configurations
     └── home-manager/  # User-level configurations (managed by Home Manager)
-        ├── modules/   # The heart of the setup:
-        │   ├── cli/       # CLI tools (e.g., eza, fzf, git, delta, lazygit)
-        │   ├── dev/       # Development tools (e.g., direnv, language tools)
-        │   ├── shell/     # Zsh, Tmux, and other shell settings
-        │   └── system-tools.nix  # System monitoring tools (e.g., podman, nmap)
-        └── default.nix  # Aggregates all Home Manager configurations
+        ├── editors/   # Neovim, VSCode (with enable flags)
+        ├── languages/ # Language-specific configs (Python, etc.)
+        └── modules/   # The heart of the setup:
+            ├── cli/       # CLI tools, fzf, git, kubernetes
+            ├── dev/       # Build tools, direnv
+            ├── shell/     # Zsh, Starship, keybindings, functions, Tmux
+            └── system/    # Monitoring, network diagnostics, podman
 ```
 
 ---
@@ -76,7 +76,9 @@ dotfiles/
     ```
 2.  **Run the Installation Script**: This will install Nix and set up your environment.
     ```bash
-    ./install.sh
+    ./install.sh          # Phase 1: installs Nix, then asks you to restart your shell
+    # restart your shell
+    ./install.sh          # Phase 2: sets zsh as default, wires config sourcing
     ```
 3.  **Set Your Local User Settings**: Keep the committed template in `nix/user.nix` generic. Put your real identity in a local `.user.nix` at the repo root:
     ```nix
@@ -91,6 +93,70 @@ dotfiles/
     - **macOS — nix-darwin**: `nix run --impure .#dma-switch` (Apple Silicon) or `nix run --impure .#dmx-switch` (Intel), as appropriate for your machine (`nix/systems.nix`).
     - **macOS — Home Manager only**: `nix run --impure .#hma-switch` or `nix run --impure .#hmx-switch`.
     - **Linux — Home Manager**: `nix run --impure .#hlx-switch` (x86_64) or `nix run --impure .#hla-switch` (aarch64).
+
+---
+
+## 🎛️ Feature Flags
+
+Tool categories can be toggled on or off. All are enabled by default. Override in `nix/home-manager/default.nix` or `.user.nix`:
+
+```nix
+tools = {
+  enableGit = true;           # Git + delta + lazygit + GPG signing
+  enableKubernetes = true;    # kubectl + k9s + shell completions
+  enableMonitoring = true;    # lsof, ncdu
+  enableNetworkTools = true;  # nmap, mtr, trippy, termshark, etc.
+  enableTmux = true;          # Tmux terminal multiplexer
+};
+
+editors = {
+  enableNeovim = true;
+  enableVSCode = true;
+};
+```
+
+---
+
+## 🔍 Fzf — Fuzzy Finder
+
+Fzf is deeply integrated into the shell with keybindings and helper functions.
+
+**Keybindings:**
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+T` | Fuzzy find files, paste path (bat preview) |
+| `Alt+C` | Fuzzy cd into directory (eza tree preview) |
+| `Ctrl+R` | Fuzzy history search |
+| `Ctrl+/` | Toggle preview pane |
+
+**Functions:**
+
+| Command | Description |
+|---------|-------------|
+| `fe` | Fuzzy open file in `$EDITOR` |
+| `fcd` | Fuzzy cd into any subdirectory |
+| `fgl` | Interactive git log → checkout |
+| `fbr` | Interactive git branch switcher |
+| `fkill` | Interactive process killer |
+| `fenv` | Browse environment variables |
+
+See `nix/home-manager/modules/cli/fzf.nix`.
+
+---
+
+## ⌨️ Zsh Keybindings
+
+The shell uses **vi mode** with these custom bindings:
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+S` | Prepend `sudo` to current command (or recall last command with sudo) |
+| `Ctrl+X Ctrl+E` | Edit current command in `$EDITOR` |
+| `v` (normal mode) | Edit current command in `$EDITOR` |
+| `f` | Fix last failed command ([pay-respects](https://github.com/iffse/pay-respects)) |
+
+See `nix/home-manager/modules/shell/keybindings.nix`.
 
 ---
 

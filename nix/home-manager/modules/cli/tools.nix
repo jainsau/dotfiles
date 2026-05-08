@@ -12,6 +12,7 @@
     hyperfine
     jq
     kiro-cli
+    navi
     gemini-cli
     claude-code
     codex
@@ -26,7 +27,6 @@
     tree
     yq
     zoxide
-    kubectl
   ];
 
   home.shellAliases = {
@@ -41,16 +41,5 @@
     l = "eza -l";
     la = "eza -la --git";
     tl = "tree -aL";
-  };
-
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    defaultCommand = "fd --type f --hidden --follow --exclude .git";
-    defaultOptions = [
-      "--height 40%"
-      "--border"
-      "--preview 'bat --color=always --style=numbers --line-range :500 {}'"
-    ];
   };
 }

@@ -1,5 +1,5 @@
 # === TMUX MODULE ===
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   # TMUX Auto-start Configuration (OMZ-style)
@@ -20,7 +20,9 @@ let
     startOnLocal = true;
   };
 in
+with lib;
 {
+  config = mkIf config.tools.enableTmux {
   # === Tmux Configuration ===
   programs.tmux = {
     enable = true;
@@ -129,4 +131,5 @@ in
     # Run tmux auto-start logic
     _zsh_tmux_plugin_run
   '';
+  };
 }

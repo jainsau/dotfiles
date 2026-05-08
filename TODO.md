@@ -76,3 +76,17 @@ Replace `install.sh` and switch scripts with a Go CLI (`dotfiles` or similar):
 - [ ] Interactive TUI for feature flag selection (pick tools to enable, writes to `.user.nix`)
 - [ ] Better error handling and cross-platform logic than bash
 - [ ] Keep Nix for declarative config + packages; Go handles imperative glue and UX
+
+## Battery-Included Tool Modules
+
+Evolve modules from "install packages" to "complete tool experiences" (install + config + aliases + completions + shell integration). Only split into dedicated modules when a tool has meaningful config beyond package + alias.
+
+Candidates for dedicated modules:
+- [ ] `cli/git.nix` — already done (git + delta + lazygit + gpg + aliases)
+- [ ] `cli/kubernetes.nix` — kubectl + k9s + completions + alias k
+- [ ] `shell/tmux.nix` / `shell/zellij.nix` — multiplexer with full config
+- [ ] `cli/fzf.nix` — fzf + shell integration + preview config (extract from tools.nix)
+- [ ] `system/podman.nix` — podman + alias + systemd service (extract from system-tools)
+
+Keep grouped in `cli/tools.nix` (no dedicated module needed):
+- bat, eza, fd, ripgrep, dust, duf, procs, etc. — just package + alias
