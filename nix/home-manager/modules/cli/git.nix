@@ -24,14 +24,14 @@ with lib;
 
     programs.git = {
       enable = true;
-      settings.user = {
-        name = gitUser;
-        email = gitEmail;
-      };
-      extraConfig = {
+      settings = {
         diff.tool = "nvimdiff";
         merge.tool = "nvimdiff";
         difftool.prompt = false;
+        user = {
+          name = gitUser;
+          email = gitEmail;
+        };
       };
       signing = {
         format = "openpgp";
