@@ -59,6 +59,10 @@ with lib;
       unbind "\""
       bind s split-window
 
+      # Nested tmux toggle — F12 suspends local key capture to pass keys to inner session
+      bind -T root F12  set prefix None \; set key-table off
+      bind -T off  F12  set prefix "`" \; set -u key-table
+
       # === Popups ===
       bind-key / display-popup -E -w 70% -h 60% -T "Shell" "zsh"
     '';
@@ -117,13 +121,13 @@ with lib;
         if [[ "$ZSH_TMUX_AUTOCONNECT" == "true" ]]; then
           # Try to attach to existing session
           if tmux has-session -t "$ZSH_TMUX_DEFAULT_SESSION" 2>/dev/null; then
-            exec tmux attach-session -t "$ZSH_TMUX_DEFAULT_SESSION"
+            tmux attach-session -t "$ZSH_TMUX_DEFAULT_SESSION"
           else
-            exec tmux new-session -s "$ZSH_TMUX_DEFAULT_SESSION"
+            tmux new-session -s "$ZSH_TMUX_DEFAULT_SESSION"
           fi
         else
           # Always create new session
-          exec tmux new-session -s "$ZSH_TMUX_DEFAULT_SESSION"
+          tmux new-session -s "$ZSH_TMUX_DEFAULT_SESSION"
         fi
       fi
     }
