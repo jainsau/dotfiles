@@ -2,6 +2,7 @@
 { config, pkgs, lib, ... }:
 {
   # Override ~/.zshenv: source HM session vars but don't set ZDOTDIR.
+    # unset __HM_SESS_VARS_SOURCED
   home.file.".zshenv".text = lib.mkForce ''
     . "${config.home.homeDirectory}/.nix-profile/etc/profile.d/hm-session-vars.sh"
   '';
@@ -35,7 +36,7 @@
       setopt AUTO_PUSHD
 
       # Local user binaries
-      export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/.cargo/bin:$HOME/.local/share/npm/bin:$HOME/.local/bin:$PATH"
 
       # Kiro CLI post block. Keep at the bottom of this file.
       if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then

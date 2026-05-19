@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "synced_at": "2026-05-17T04:42:03.023Z",
+  "packages": {
+    "pi-web-search": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "pi-lean-ctx": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "pi-depo": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "pi-proxy-models": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": false,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "pi-extensions": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "caveman": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    },
+    "pi-model-router": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-17T04:42:03.023Z"
+    }
+  },
+  "mcp_servers": {}
+}

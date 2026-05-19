@@ -1,0 +1,9 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto
+
+# Force these specific files to always use LF (macOS/Linux)
+*.sh text eol=lf
+*.nix text eol=lf
+
+# Hide lockfiles from GitHub language stats and PR diffs
+flake.lock linguist-generated=true

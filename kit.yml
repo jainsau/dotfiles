@@ -1,0 +1,48 @@
+meta:
+  home: "~"
+  pi_version: 0.74.1
+packages:
+  pi-web-search:
+    source: npm:@ollama/pi-web-search
+    rating: core
+  pi-lean-ctx:
+    source: npm:pi-lean-ctx
+    rating: core
+  pi-depo:
+    source: npm:pi-depo
+    rating: core
+  pi-proxy-models:
+    source: npm:pi-proxy-models
+    rating: useful
+  pi-extensions:
+    source: git:github.com/tmustier/pi-extensions
+    rating: useful
+    extensions:
+      - files-widget/index.ts
+      - session-recap/index.ts
+      - arcade/tetris.ts
+      - arcade/ping.ts
+      - arcade/picman.ts
+      - arcade/spice-invaders.ts
+      - arcade/mario-not/mario-not.ts
+  caveman:
+    source: git:github.com/JuliusBrussee/caveman
+    rating: useful
+  pi-model-router:
+    source: npm:@kylebrodeur/pi-model-router
+    rating: core
+  pi-mcp:
+    source: npm:@0xkobold/pi-mcp
+    rating: core
+  pi-github-tools:
+    source: npm:@gotgenes/pi-github-tools
+    rating: useful
+  pi-github:
+    source: npm:pi-github
+    rating: useful
+  pi-subagents:
+    source: npm:pi-subagents
+    rating: useful
+  pi-web-access:
+    source: npm:pi-web-access
+    rating: useful

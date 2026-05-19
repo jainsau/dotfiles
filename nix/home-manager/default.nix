@@ -23,6 +23,7 @@ in {
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
+    NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.local/share/npm";
   };
 
   home.shellAliases = {

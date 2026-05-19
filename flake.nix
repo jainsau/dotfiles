@@ -20,7 +20,7 @@
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, ... }:
     let
       systems = import ./nix/systems.nix;
-      baseUserSettings = import ./nix/user.nix;
+      baseUserSettings = import ./nix/user.nix; # this is just a dummy
       localUserConfigPath =
         let
           fromEnv = builtins.getEnv "DOTFILES_USER_CONFIG";

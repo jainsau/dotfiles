@@ -11,13 +11,8 @@
     htop
     hyperfine
     jq
-    kiro-cli
     navi
-    gemini-cli
-    claude-code
-    codex
     markdownlint-cli2
-    opencode
     pay-respects
     procs
     pstree

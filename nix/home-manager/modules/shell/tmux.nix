@@ -41,6 +41,7 @@ with lib;
     extraConfig = ''
       set -g mouse on
       set -g set-clipboard on # Fix clipboard issues
+      set -g extended-keys on
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'

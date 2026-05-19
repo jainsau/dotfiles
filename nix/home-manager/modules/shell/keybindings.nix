@@ -33,6 +33,26 @@
     stty -ixon
     bindkey '^S' insert-sudo
 
+    # Ripgrep + fzf interactive search (Ctrl+F)
+    fzf-rg-widget() {
+      local result file line
+      result=$(rg --color=always --line-number --no-heading "" . 2>/dev/null |
+        fzf --ansi --disabled \
+          --bind "change:reload:rg --color=always --line-number --no-heading {q} . 2>/dev/null || true" \
+          --delimiter ':' \
+          --preview 'bat --color=always --style=numbers --highlight-line {2} -- {1}' \
+          --preview-window '+{2}-5')
+      file=$(echo "$result" | cut -d: -f1)
+      line=$(echo "$result" | cut -d: -f2)
+      if [[ -n "$file" ]]; then
+        BUFFER="''${EDITOR:-vim} +$line $file"
+        zle accept-line
+      fi
+      zle reset-prompt
+    }
+    zle -N fzf-rg-widget
+    bindkey '^F' fzf-rg-widget
+
     # navi: interactive cheatsheet (Ctrl+G)
     eval "$(navi widget zsh)"
   '';

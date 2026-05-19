@@ -1,6 +1,6 @@
 {
   username = "jane";
-  homeDirectory = "/Users/jane";
+  homeDirectoryName = "jane";
   gitUser = "Jane Doe";
   gitEmail = "jane.doe@acme.example";
   gpgKey = "";

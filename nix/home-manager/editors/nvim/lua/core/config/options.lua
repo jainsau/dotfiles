@@ -32,6 +32,7 @@ opt.relativenumber = true      -- Relative line number
 opt.signcolumn = "yes"         -- Always show the signcolumn
 opt.showmode = false           -- Don't show mode, since it's already in status line
 opt.cursorline = true          -- Enable highlighting of the current line
+opt.cursorcolumn = true				 -- Highlights the current column
 
 opt.hlsearch = true            -- Set highlight on search; clear on pressing
 opt.inccommand = "split"       -- Preview and apply changes to a range of lines in real-time

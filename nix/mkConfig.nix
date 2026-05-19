@@ -1,35 +1,35 @@
 { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
 let
-  getHomeDirectory = system: username:
+  getHomeDirectory = system: homeDirectoryName:
     let
       isDarwin = builtins.match ".*-darwin" system != null;
     in
-    if isDarwin then "/Users/${username}" else "/home/${username}";
+    if isDarwin then "/Users/${homeDirectoryName}" else "/home/${homeDirectoryName}";
 
   mkHomeConfig = name: cfg: settings:
-  let
-    homeDirectory = getHomeDirectory cfg.system settings.username;
-  in
-  {
-    name = name;
-    value = home-manager.lib.homeManagerConfiguration {
-      pkgs = (import nixpkgs {
-        inherit (cfg) system;
-        config.allowUnfree = true;
-      });
-      extraSpecialArgs = {
-        inherit inputs;
-        inherit (settings) username gitUser gitEmail gpgKey;
-        inherit homeDirectory;
-        system = cfg.system;
+    let
+      homeDirectory = getHomeDirectory cfg.system settings.homeDirectoryName;
+    in
+    {
+      name = name;
+      value = home-manager.lib.homeManagerConfiguration {
+        pkgs = (import nixpkgs {
+          inherit (cfg) system;
+          config.allowUnfree = true;
+        });
+        extraSpecialArgs = {
+          inherit inputs;
+          inherit (settings) username gitUser gitEmail gpgKey;
+          inherit homeDirectory;
+          system = cfg.system;
+        };
+        modules = [ "${self}/nix/home-manager" ];
       };
-      modules = [ "${self}/nix/home-manager" ];
     };
-  };
 
   mkDarwinConfig = name: cfg: settings:
     let
-      homeDirectory = getHomeDirectory cfg.system settings.username;
+      homeDirectory = getHomeDirectory cfg.system settings.homeDirectoryName;
     in
     {
       name = name;

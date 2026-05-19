@@ -77,5 +77,18 @@
       file=$(fzf --preview 'bat --color=always --style=numbers --line-range :300 {}')
       [[ -n "$file" ]] && ''${EDITOR:-vim} "$file"
     }
+
+    # Fuzzy grep: search file contents with ripgrep + fzf, open result in $EDITOR
+    frg() {
+      local file line
+      local result
+      result=$(rg --color=always --line-number --no-heading "''${1:-}" "''${2:-.}" |
+        fzf --ansi --delimiter ':' \
+          --preview 'bat --color=always --style=numbers --highlight-line {2} -- {1}' \
+          --preview-window '+{2}-5')
+      file=$(echo "$result" | cut -d: -f1)
+      line=$(echo "$result" | cut -d: -f2)
+      [[ -n "$file" ]] && ''${EDITOR:-vim} "+$line" "$file"
+    }
   '';
 }
