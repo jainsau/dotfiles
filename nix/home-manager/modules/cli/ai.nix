@@ -32,7 +32,10 @@ in {
       ];
     };
 
-    # Optionally, we can also declaratively manage Pi extensions here in the future
-    # home.file.".pi/agent/extensions/gemma-compaction.ts".text = '' ... '';
+    # Override built-in subagent extension to avoid conflict with pi-subagents (managed via kit.yml)
+    home.file.".pi/agent/extensions/index.ts" = {
+      text = "// managed by home-manager: subagent provided by pi-subagents (kit.yml)\nexport default () => ({});\n";
+      force = true;
+    };
   };
 }

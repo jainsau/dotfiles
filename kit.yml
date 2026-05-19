@@ -2,9 +2,9 @@ meta:
   home: "~"
   pi_version: 0.74.1
 packages:
-  pi-web-search:
-    source: npm:@ollama/pi-web-search
-    rating: core
+  pi-web-access:
+    source: npm:pi-web-access
+    rating: useful
   pi-lean-ctx:
     source: npm:pi-lean-ctx
     rating: core
@@ -42,7 +42,4 @@ packages:
     rating: useful
   pi-subagents:
     source: npm:pi-subagents
-    rating: useful
-  pi-web-access:
-    source: npm:pi-web-access
     rating: useful
