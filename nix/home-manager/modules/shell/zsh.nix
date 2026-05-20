@@ -25,9 +25,9 @@
       fi
 
       # Kiro CLI pre block. Keep at the top of this file.
-      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]]; then
+      if [ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]; then
         builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
-      elif [[ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh" ]]; then
+      elif [ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh" ]; then
         builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh"
       fi
 
@@ -38,10 +38,15 @@
       # Local user binaries
       export PATH="$HOME/.cargo/bin:$HOME/.local/share/npm/bin:$HOME/.local/bin:$PATH"
 
+      # Source secrets (API tokens, credentials)
+      if [ -f "$HOME/.secrets.env" ]; then
+        source "$HOME/.secrets.env"
+      fi
+
       # Kiro CLI post block. Keep at the bottom of this file.
-      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
+      if [ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]; then
         builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
-      elif [[ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh" ]]; then
+      elif [ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh" ]; then
         builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh"
       fi
     '';

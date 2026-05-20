@@ -1,0 +1,23 @@
+Security Fix: Secrets Management
+
+COMPLETED:
+✅ Created ~/.secrets.env with proper permissions (600)
+✅ Moved GITHUB_TOKEN to ~/.secrets.env
+✅ Updated zsh.nix to source secrets file
+✅ Cleaned shell history (removed 2 GITHUB_TOKEN entries)
+✅ Added .secrets.env to .gitignore
+✅ Documented in openspec (README, proposal, CHANGELOG)
+✅ Updated AGENTS.md with standing instructions
+
+PENDING:
+⚠️  ROTATE GITHUB TOKEN (exposed in shell history)
+   1. Generate new at https://github.com/settings/tokens
+   2. Update ~/.secrets.env
+   3. Revoke old token (check shell history backup)
+
+NEXT STEPS:
+1. Review changes: git diff
+2. Rebuild: home-manager switch --flake .
+3. Restart shell: exec zsh
+4. Verify: echo $GITHUB_TOKEN
+5. Rotate token (see above)

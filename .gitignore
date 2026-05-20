@@ -39,6 +39,9 @@ result/
 # Local user override
 .user.nix
 
+# Runtime secrets
+.secrets.env
+
 # OS generated files
 .DS_Store
 Thumbs.db
