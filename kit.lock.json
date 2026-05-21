@@ -1,48 +1,84 @@
 {
   "version": 1,
-  "synced_at": "2026-05-17T04:42:03.023Z",
+  "synced_at": "2026-05-21T00:34:35.111Z",
   "packages": {
-    "pi-web-search": {
+    "pi-web-access": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "pi-lean-ctx": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "pi-depo": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "pi-proxy-models": {
       "type": "pi-native",
       "installed": true,
-      "verified": false,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "pi-extensions": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "caveman": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
     },
     "pi-model-router": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-17T04:42:03.023Z"
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "pi-mcp": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "pi-github-tools": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "pi-github": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "pi-subagents": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "pi-hooks": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
+    },
+    "rhubarb-pi": {
+      "type": "pi-native",
+      "installed": true,
+      "verified": true,
+      "installed_at": "2026-05-21T00:34:35.111Z"
     }
   },
   "mcp_servers": {}

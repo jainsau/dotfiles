@@ -1,6 +1,6 @@
 meta:
   home: "~"
-  pi_version: 0.74.1
+  pi_version: 0.75.4
 packages:
   pi-web-access:
     source: npm:pi-web-access
@@ -43,3 +43,15 @@ packages:
   pi-subagents:
     source: npm:pi-subagents
     rating: useful
+  pi-hooks:
+    source: npm:pi-hooks
+    rating: useful
+  rhubarb-pi:
+    source: git:github.com/qualisero/rhubarb-pi
+    rating: debatable
+    reason: Evaluate compatibility for safe-git, safe-rm, background notifications, and SCIP tools before promoting.
+    extensions:
+      - hooks/background-notify/index.ts
+      - extensions/safe-git/index.ts
+      - extensions/safe-rm/index.ts
+      - extensions/pi-agent-scip/index.ts
