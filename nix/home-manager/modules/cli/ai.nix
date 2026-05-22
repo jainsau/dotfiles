@@ -11,7 +11,16 @@ in {
       claude-code
       pi-coding-agent
       openspec
+      uv
     ];
+
+    home.activation.setupGraphify = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Install graphifyy via uv and set it up for Pi
+      $DRY_RUN_CMD ${pkgs.uv}/bin/uv tool install graphifyy || true
+      if [ -f "$HOME/.local/bin/graphify" ]; then
+        $DRY_RUN_CMD "$HOME/.local/bin/graphify" install --platform pi || true
+      fi
+    '';
 
     # Model Context Protocol (MCP) Configuration for Pi and other MCP clients
     home.file.".0xkobold/mcp.json".text = builtins.toJSON {
