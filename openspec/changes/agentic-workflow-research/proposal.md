@@ -21,6 +21,11 @@ This is an exploratory research phase to evaluate the synthesis of these distinc
    - **OpenSpec**: Acts as the immutable ledger for architectural intent and requirements.
    - The workflow loop: OpenSpec defines the boundary/task $\rightarrow$ Archon plans $\rightarrow$ SCIP/Graphify provides structural context $\rightarrow$ Pi executes $\rightarrow$ OpenSpec validates the resulting state.
 
+4. **Fit-for-Purpose Model Routing**
+   - We must avoid using massive "world models" for every single step.
+   - Route simpler, deterministic tasks (e.g., basic code extraction, parsing, SCIP graph traversal) to smaller, faster, or local models.
+   - Reserve high-capability frontier models for complex architectural reasoning and planning.
+
 ## Capabilities
 
 ### New Capabilities

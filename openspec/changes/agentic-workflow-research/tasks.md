@@ -7,3 +7,8 @@
 
 - [ ] 2.1 Create a proof-of-concept Pi extension that uses SCIP and Graphify to answer an architectural question
 - [ ] 2.2 Test using OpenSpec validation as an automated feedback loop for Pi
+
+## 3. Model Routing Strategy
+
+- [ ] 3.1 Evaluate `pi-model-router` or Archon's native routing for dynamically selecting models based on task type
+- [ ] 3.2 Benchmark latency and cost savings of using local/smaller models for SCIP/Graphify structural traversals
