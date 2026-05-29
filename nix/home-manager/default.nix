@@ -84,4 +84,11 @@ in {
       font_family = "FiraCode Nerd Font";
     };
   };
+
+  xdg.configFile."mimeapps.list" = {
+    text = ''
+      [Default Applications]
+    '';
+    force = true;
+  };
 }
