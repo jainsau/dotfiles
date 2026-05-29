@@ -13,6 +13,7 @@ in {
   home.username = username;
   home.homeDirectory = homeDirectory;
   home.stateVersion = "24.11";
+  home.enableNixpkgsReleaseCheck = false;
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
