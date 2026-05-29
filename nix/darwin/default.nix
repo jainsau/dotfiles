@@ -47,8 +47,10 @@
     brews = [
       "lima"
       "colima"
+      "archon"
    ];
     taps = [
+      "coleam00/archon"
     ];
   };
 }
