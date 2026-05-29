@@ -40,6 +40,13 @@ with lib;
       };
     };
 
+    programs.gh = {
+      enable = true;
+      settings = {
+        git_protocol = "ssh";
+      };
+    };
+
     home.shellAliases = {
       g = "git";
       ga = "git add";
