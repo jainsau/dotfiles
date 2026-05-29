@@ -16,6 +16,9 @@ in {
 
     home.activation.setupGraphify = lib.hm.dag.entryAfter ["writeBoundary"] ''
       # Install graphifyy via uv and set it up for Pi
+      if [ "$(uname)" = "Darwin" ] && [ -x /usr/bin/xcrun ]; then
+        export SDKROOT=$(/usr/bin/xcrun --show-sdk-path)
+      fi
       $DRY_RUN_CMD ${pkgs.uv}/bin/uv tool install graphifyy || true
       if [ -f "$HOME/.local/bin/graphify" ]; then
         $DRY_RUN_CMD "$HOME/.local/bin/graphify" install --platform pi || true
