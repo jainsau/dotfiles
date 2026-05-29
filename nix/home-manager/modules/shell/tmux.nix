@@ -42,6 +42,7 @@ with lib;
       set -g mouse on
       set -g set-clipboard on # Fix clipboard issues
       set -g extended-keys on
+      set -g extended-keys-format csi-u
 
       # Auto-start `tmux-continuum`
       set -g @continuum-restore 'on'
