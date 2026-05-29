@@ -9,7 +9,7 @@ This is an exploratory research phase to evaluate the synthesis of these distinc
 ### Key Research Areas
 
 1. **Archon & Pi Integration**
-   - Investigate using **Archon** (for structured orchestration, robust control planes, or sub-agent delegation) in combination with **Pi** (our primary coding agent harness).
+   - Investigate using **[Archon](https://github.com/coleam00/archon)** (for structured orchestration, robust control planes, or sub-agent delegation) in combination with **Pi** (our primary coding agent harness).
    - How can Archon provide deterministic boundaries or strict planning steps that Pi then executes?
 
 2. **Code Intelligence (SCIP + Graphify)**
