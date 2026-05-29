@@ -42,6 +42,7 @@
       "ollama"
       "obsidian"
       "multipass"
+      "postman"
     ];
     brews = [
       "lima"
