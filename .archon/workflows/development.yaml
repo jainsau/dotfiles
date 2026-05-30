@@ -1,14 +1,21 @@
 name: agentic-dev-loop
 description: Comprehensive spec-driven development loop using OpenSpec and Archon
+interactive: true
 nodes:
   - id: plan
     command: archon-create-plan
     description: "Generate implementation plan from requirement specifications"
 
+  - id: approve-plan
+    approval:
+      message: "Please review the generated implementation plan above before proceeding with code changes."
+      capture_response: true
+    depends_on: [plan]
+
   - id: implement
     command: archon-implement-tasks
-    depends_on: [plan]
-    description: "Execute file edits according to the generated plan"
+    depends_on: [approve-plan]
+    description: "Execute file edits according to the approved plan"
 
   - id: validate
     command: run-tests
