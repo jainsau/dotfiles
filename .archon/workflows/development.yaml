@@ -1,0 +1,29 @@
+name: agentic-dev-loop
+description: Comprehensive spec-driven development loop using OpenSpec and Archon
+nodes:
+  - id: plan
+    command: archon-create-plan
+    description: "Generate implementation plan from requirement specifications"
+
+  - id: implement
+    command: archon-implement-tasks
+    depends_on: [plan]
+    description: "Execute file edits according to the generated plan"
+
+  - id: validate
+    command: run-tests
+    depends_on: [implement]
+    context: fresh
+    description: "Verify the configuration using 'nix flake check' and run 'openspec validate'"
+
+  - id: code-review
+    command: archon-code-review-agent
+    depends_on: [validate]
+    context: fresh
+    description: "Perform parallel code quality and conventions review"
+
+  - id: self-fix
+    command: archon-implement-review-fixes
+    depends_on: [code-review]
+    context: fresh
+    description: "Synthesize and automatically apply any recommended fixes from the review"
