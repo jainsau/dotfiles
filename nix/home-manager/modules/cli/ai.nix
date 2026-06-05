@@ -3,6 +3,14 @@
 with lib;
 let
   cfg = config.tools.enableAiTools;
+
+  # Packaging OpenClaw using our high-performance Node wrapper script
+  openclaw-pkg = pkgs.writeShellScriptBin "openclaw" ''
+    # Execute openclaw dynamically using npx (fully sandboxed and cached)
+    export OPENCLAW_CONFIG_PATH="''${XDG_CONFIG_HOME:-$HOME/.config}/openclaw/openclaw.json"
+    exec ${pkgs.nodejs_22}/bin/npx -y openclaw@latest "$@"
+  '';
+
 in {
   config = mkIf cfg {
     home.packages = with pkgs; [
@@ -12,6 +20,7 @@ in {
       pi-coding-agent
       openspec
       uv
+      openclaw-pkg   # Globallly available unbranded OpenClaw binary
     ];
 
     home.activation.setupGraphify = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -48,6 +57,15 @@ in {
     home.file.".pi/agent/extensions/index.ts" = {
       text = "// managed by home-manager: subagent provided by pi-subagents (kit.yml)\nexport default () => ({});\n";
       force = true;
+    };
+
+    # OpenClaw Configuration File managed declaratively via Home Manager under XDG Config Home
+    xdg.configFile."openclaw/openclaw.json".text = builtins.toJSON {
+      agents = {
+        defaults = {
+          workspace = "~/.openclaw/workspace";
+        };
+      };
     };
   };
 }
