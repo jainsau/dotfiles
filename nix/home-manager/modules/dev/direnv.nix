@@ -148,6 +148,52 @@
         fi
       }
 
+      # === NAVA CENTRALIZED LAYOUT ===
+      layout_nava() {
+        use flake
+
+        # 1. Automate graphify installation
+        if ! command -v graphify &> /dev/null; then
+          log_status "Installing graphify CLI..."
+          uv tool install graphifyy || true
+          graphify install --platform pi || true
+        fi
+
+        # 2. Clone OpenClaw / global skills for Go development if not present
+        if [[ ! -d "$HOME/.pi/agent/skills/openclaw-store" ]]; then
+          log_status "📥 Cloning global OpenClaw and Pi skills store..."
+          git clone https://github.com/openclaw/skills.git "$HOME/.pi/agent/skills/openclaw-store"
+        fi
+
+        # 3. Auto-manage Git hooks for current repository
+        if [[ -d .git ]]; then
+          mkdir -p .git/hooks
+
+          # Write the Pre-Commit Hook (Enforces OpenSpec Validation)
+          cat << 'EOF' > .git/hooks/pre-commit
+#!/bin/sh
+echo "🛡️ Verifying OpenSpec specifications..."
+if command -v openspec &> /dev/null; then
+  openspec validate --all || {
+    echo "❌ ERROR: OpenSpec validation failed. Fix errors before committing."
+    exit 1
+  }
+fi
+EOF
+          chmod +x .git/hooks/pre-commit
+
+          # Write the Post-Checkout Hook (Trigger Background SCIP/Graphify)
+          cat << 'EOF' > .git/hooks/post-checkout
+#!/bin/sh
+echo "🔄 Git branch checkout/merge detected."
+if command -v scip-go &> /dev/null; then
+  (scip-go index --quiet &)
+fi
+EOF
+          chmod +x .git/hooks/post-checkout
+        fi
+      }
+
       # === UTILITY FUNCTIONS ===
       layout_cleanup() {
         log_status "Cleaning up development environment..."
