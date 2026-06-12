@@ -11,6 +11,11 @@ let
     exec ${pkgs.nodejs_22}/bin/npx -y openclaw@latest "$@"
   '';
 
+  # Agent Client Protocol adapter for Pi, consumed by Neovim's agentic.nvim.
+  pi-acp-pkg = pkgs.writeShellScriptBin "pi-acp" ''
+    exec ${pkgs.nodejs_22}/bin/npx -y pi-acp@0.0.28 "$@"
+  '';
+
 in {
   config = mkIf cfg {
     home.packages = with pkgs; [
@@ -21,6 +26,7 @@ in {
       openspec
       uv
       openclaw-pkg   # Globallly available unbranded OpenClaw binary
+      pi-acp-pkg     # ACP adapter for Pi, used by agentic.nvim
     ];
 
     home.activation.setupGraphify = lib.hm.dag.entryAfter ["writeBoundary"] ''

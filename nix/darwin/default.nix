@@ -1,5 +1,5 @@
 # === DARWIN (macOS) SYSTEM CONFIGURATION ===
-{ pkgs, ... }@args:
+{ pkgs, lib, ... }@args:
 
 {
   imports = [ ];
@@ -34,12 +34,16 @@
       autoUpdate = true;
       upgrade = true;
       cleanup = "uninstall";
+      # nix-darwin invokes brew via sudo --set-home without inheriting the
+      # user's shell environment. Preserve Homebrew's XDG trust store so
+      # trusted taps/formulae are visible during activation.
+      extraEnv.XDG_CONFIG_HOME = "/Users/${args.username}/.config";
     };
 
     casks = [
       "maccy"
       "utm"
-      "ollama"
+      "ollama-app"
       "obsidian"
       "multipass"
       "postman"
@@ -48,7 +52,10 @@
       "lima"
       "colima"
       "archon"
-   ];
+    ] ++ lib.optionals pkgs.stdenv.hostPlatform.isAarch64 [
+      # Apple's Container CLI is Apple Silicon-only.
+      "container"
+    ];
     taps = [
       "coleam00/archon"
     ];
