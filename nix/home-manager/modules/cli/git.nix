@@ -77,6 +77,10 @@ with lib;
       settings = {
         gui.showIcons = true;
         confirmOnQuit = true;
+        git.paging = {
+          colorArg = "always";
+          pager = "delta --dark --side-by-side --line-numbers --paging=never";
+        };
         keybinding = {
           universal.quit = "q";
           universal.return = "<esc>";

@@ -18,7 +18,7 @@ return {
         function()
           require('agentic').toggle()
         end,
-        mode = { 'n', 'v', 'i' },
+        mode = { 'n', 'v' },
         desc = '[A]gentic [A]sk',
       },
       {
@@ -34,7 +34,7 @@ return {
         function()
           require('agentic').new_session()
         end,
-        mode = { 'n', 'v', 'i' },
+        mode = { 'n', 'v' },
         desc = '[A]gentic [N]ew session',
       },
       {
@@ -42,7 +42,7 @@ return {
         function()
           require('agentic').restore_session()
         end,
-        mode = { 'n', 'v', 'i' },
+        mode = { 'n', 'v' },
         desc = '[A]gentic [R]estore session',
       },
       {
@@ -71,7 +71,7 @@ return {
         function()
           require('agentic').stop_generation()
         end,
-        mode = { 'n', 'v', 'i' },
+        mode = { 'n', 'v' },
         desc = '[A]gentic stop generation',
       },
     },
