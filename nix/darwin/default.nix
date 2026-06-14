@@ -37,7 +37,7 @@
       # nix-darwin invokes brew via sudo --set-home without inheriting the
       # user's shell environment. Preserve Homebrew's XDG trust store so
       # trusted taps/formulae are visible during activation.
-      extraEnv.XDG_CONFIG_HOME = "/Users/${args.username}/.config";
+      extraEnv.XDG_CONFIG_HOME = "${args.homeDirectory}/.config";
     };
 
     casks = [

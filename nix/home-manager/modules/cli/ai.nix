@@ -4,17 +4,18 @@ with lib;
 let
   cfg = config.tools.enableAiTools;
 
-  # Packaging OpenClaw using our high-performance Node wrapper script
-  openclaw-pkg = pkgs.writeShellScriptBin "openclaw" ''
-    # Execute openclaw dynamically using npx (fully sandboxed and cached)
-    export OPENCLAW_CONFIG_PATH="''${XDG_CONFIG_HOME:-$HOME/.config}/openclaw/openclaw.json"
-    exec ${pkgs.nodejs_22}/bin/npx -y openclaw@latest "$@"
-  '';
-
   # Agent Client Protocol adapter for Pi, consumed by Neovim's agentic.nvim.
-  pi-acp-pkg = pkgs.writeShellScriptBin "pi-acp" ''
-    exec ${pkgs.nodejs_22}/bin/npx -y pi-acp@0.0.28 "$@"
-  '';
+  pi-acp-pkg = pkgs.buildNpmPackage rec {
+    pname = "pi-acp";
+    version = "0.0.28";
+    src = pkgs.fetchFromGitHub {
+      owner = "svkozak";
+      repo = "pi-acp";
+      rev = "f9ca92d5e14ca5ed4ae3883031e2425bd517f87d";
+      hash = "sha256-sGmP6HYHmz2QyACPWnM4vuhnIr8GnKLJXtj98tvTe74=";
+    };
+    npmDepsHash = "sha256-/k//AikjjJNUkA38O/gXh4yEk/E52+ue6BI/SwRCa8k=";
+  };
 
 in {
   config = mkIf cfg {
@@ -25,39 +26,9 @@ in {
       pi-coding-agent
       openspec
       uv
-      openclaw-pkg   # Globallly available unbranded OpenClaw binary
       pi-acp-pkg     # ACP adapter for Pi, used by agentic.nvim
     ];
 
-    home.activation.setupGraphify = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      # Install graphifyy via uv and set it up for Pi
-      if [ "$(uname)" = "Darwin" ] && [ -x /usr/bin/xcrun ]; then
-        export SDKROOT=$(/usr/bin/xcrun --show-sdk-path)
-      fi
-      $DRY_RUN_CMD ${pkgs.uv}/bin/uv tool install graphifyy || true
-      if [ -f "$HOME/.local/bin/graphify" ]; then
-        $DRY_RUN_CMD "$HOME/.local/bin/graphify" install --platform pi || true
-      fi
-    '';
-
-    # Model Context Protocol (MCP) Configuration for Pi and other MCP clients
-    home.file.".0xkobold/mcp.json".text = builtins.toJSON {
-      servers = [
-        {
-          name = "github";
-          transport = {
-            type = "stdio";
-            command = "npx";
-            args = [ "-y" "@modelcontextprotocol/server-github" ];
-            env = {
-              GITHUB_PERSONAL_ACCESS_TOKEN = "\${GITHUB_TOKEN}";
-            };
-          };
-          enabled = true;
-          autoReconnect = true;
-        }
-      ];
-    };
 
     # Override built-in subagent extension to avoid conflict with pi-subagents (managed via kit.yml)
     home.file.".pi/agent/extensions/index.ts" = {
@@ -65,13 +36,5 @@ in {
       force = true;
     };
 
-    # OpenClaw Configuration File managed declaratively via Home Manager under XDG Config Home
-    xdg.configFile."openclaw/openclaw.json".text = builtins.toJSON {
-      agents = {
-        defaults = {
-          workspace = "~/.openclaw/workspace";
-        };
-      };
-    };
   };
 }

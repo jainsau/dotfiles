@@ -66,7 +66,7 @@ with lib;
       bind -T off  F12  set prefix "`" \; set -u key-table
 
       # === Popups ===
-      bind-key / display-popup -E -w 70% -h 60% -T "Shell" "zsh"
+      bind-key / display-popup -E -w 70% -h 60% -T "Shell" "$SHELL -l"
     '';
   };
 

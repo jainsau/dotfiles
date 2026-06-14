@@ -83,6 +83,8 @@ in {
     enable = true;
     settings = {
       font_family = "FiraCode Nerd Font";
+      # Make Option behave as Meta/Alt so shell widgets like fzf Alt+C work.
+      macos_option_as_alt = "left";
     };
   };
 

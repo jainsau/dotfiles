@@ -43,6 +43,7 @@ let
           inherit inputs;
           system = cfg.system;
           inherit (settings) username;
+          inherit homeDirectory;
         };
         modules = [
           { users.users.${settings.username}.home = settings.homeDirectory; }

@@ -12,42 +12,43 @@
     dotDir = "${config.xdg.configHome}/zsh";
     initContent = ''
       # Nix
-      if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+      if [[ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       fi
       # End Nix
 
       # Homebrew (skip on Linux and when not installed)
-      if [ -x /opt/homebrew/bin/brew ]; then
+      if [[ -x /opt/homebrew/bin/brew ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
-      elif [ -x /usr/local/bin/brew ]; then
+      elif [[ -x /usr/local/bin/brew ]]; then
         eval "$(/usr/local/bin/brew shellenv)"
       fi
 
       # Kiro CLI pre block. Keep at the top of this file.
-      if [ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]; then
+      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]]; then
         builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
-      elif [ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh" ]; then
-        builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.pre.zsh"
+      elif [[ -f "''${XDG_DATA_HOME}/kiro-cli/shell/zshrc.pre.zsh" ]]; then
+        builtin source "''${XDG_DATA_HOME}/kiro-cli/shell/zshrc.pre.zsh"
       fi
 
       # Zsh Options
       setopt AUTO_CD
       setopt AUTO_PUSHD
 
+      # Expand typed multi-dot paths: ... -> ../.., .... -> ../../.., etc.
+      source ${./manydots-magic.zsh}
+
       # Local user binaries
       export PATH="$HOME/.cargo/bin:$HOME/.local/share/npm/bin:$HOME/.local/bin:$PATH"
 
-      # Source secrets (API tokens, credentials)
-      if [ -f "$HOME/.secrets.env" ]; then
-        source "$HOME/.secrets.env"
-      fi
+      # Source local runtime secrets. This file is intentionally not managed by Nix.
+      [[ -f ''${XDG_CONFIG_HOME}/.secrets.env ]] && source ''${XDG_CONFIG_HOME}/.secrets.env
 
       # Kiro CLI post block. Keep at the bottom of this file.
-      if [ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]; then
+      if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
         builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
-      elif [ -f "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh" ]; then
-        builtin source "''${XDG_DATA_HOME:-$HOME/.local/share}/kiro-cli/shell/zshrc.post.zsh"
+      elif [[ -f "''${XDG_DATA_HOME}/kiro-cli/shell/zshrc.post.zsh" ]]; then
+        builtin source "''${XDG_DATA_HOME}/kiro-cli/shell/zshrc.post.zsh"
       fi
     '';
 
@@ -76,13 +77,5 @@
         src = pkgs.zsh-completions;
       }
     ];
-  };
-
-  # Navigation aliases
-  home.shellAliases = {
-    ".." = "cd ..";
-    "..." = "cd ../..";
-    "...." = "cd ../../..";
-    "....." = "cd ../../../..";
   };
 }

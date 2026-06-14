@@ -10,6 +10,8 @@ with lib;
 
     home.shellAliases = {
       pod = "podman";
+      docker = "podman";
+      docker-compose = "podman compose";
     };
   };
 }

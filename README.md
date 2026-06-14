@@ -27,6 +27,27 @@ Home Manager installs Neovim config from `nix/home-manager/editors/nvim` by copy
 
 Zsh init loads **Homebrew** only when a `brew` binary exists: **`/opt/homebrew/bin/brew`** (Apple Silicon default prefix) or **`/usr/local/bin/brew`** (Intel Mac default prefix). On Linux, neither path is used, so no `brew shellenv` runs there. See `nix/home-manager/modules/shell/zsh.nix`.
 
+Runtime secrets are intentionally not managed by Nix or Home Manager. Put local API tokens in:
+
+```bash
+$XDG_CONFIG_HOME/.secrets.env
+```
+
+Example:
+
+```bash
+export GITHUB_TOKEN="..."
+export GEMINI_API_KEY="..."
+```
+
+Then secure it:
+
+```bash
+chmod 600 "$XDG_CONFIG_HOME/.secrets.env"
+```
+
+Zsh sources that file when it exists.
+
 ---
 
 ## ✨ Features

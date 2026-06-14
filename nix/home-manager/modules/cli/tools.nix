@@ -2,12 +2,11 @@
 {
   home.packages = with pkgs; [
     bat
-    bottom
     duf
     dust
     eza
     fd
-    htop
+    btop
     hyperfine
     jq
     navi
@@ -30,10 +29,10 @@
     du = "dust";
     df = "duf";
     ps = "procs";
-    top = "bottom";
+    top = "btop";
     ll = "eza -l --git";
     l = "eza -l";
     la = "eza -la --git";
-    tl = "tree -aL";
+    t = "tree -aL";
   };
 }
