@@ -11,9 +11,9 @@ packages:
   pi-depo:
     source: npm:pi-depo
     rating: core
-  pi-proxy-models:
-    source: npm:pi-proxy-models
-    rating: useful
+  pi-guardrails:
+    source: npm:@aliou/pi-guardrails
+    rating: core
   pi-archon:
     source: git:github.com/loopyd/pi-archon
     rating: useful

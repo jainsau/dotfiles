@@ -20,11 +20,11 @@
       "verified": true,
       "installed_at": "2026-05-21T00:34:35.111Z"
     },
-    "pi-proxy-models": {
+    "pi-guardrails": {
       "type": "pi-native",
       "installed": true,
       "verified": true,
-      "installed_at": "2026-05-21T00:34:35.111Z"
+      "installed_at": "2026-06-15T09:15:00.000Z"
     },
     "pi-extensions": {
       "type": "pi-native",
