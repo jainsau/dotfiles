@@ -53,21 +53,23 @@
     zle -N fzf-rg-widget
     bindkey '^F' fzf-rg-widget
 
-    # Alias/function picker (Alt+A, Ctrl+O): insert selected command into the prompt
+    # Alias/function picker (Alt+A): insert selected command into the prompt
+    typeset -gA shell_command_descriptions
     _fzf_shell_command_select() {
       {
         alias | while IFS= read -r line; do
-          printf 'alias\t%s\t%s\n' "''${line%%=*}" "''${line#*=}"
+          local name="''${line%%=*}"
+          printf 'alias\t%s\t%s\t%s\n' "$name" "''${shell_command_descriptions[$name]-}" "''${line#*=}"
         done
 
         local fn
         for fn in fe frg fcd fgl fbr fkill fenv; do
-          (( $+functions[$fn] )) && printf 'function\t%s\t%s\n' "$fn" "$(whence -f "$fn" | sed -n '1p')"
+          (( $+functions[$fn] )) && printf 'function\t%s\t%s\t%s\n' "$fn" "''${shell_command_descriptions[$fn]-}" "$(whence -f "$fn" | sed -n '1p')"
         done
       } |
         sort |
         fzf --ansi --delimiter=$'\t' --with-nth=1,2,3 \
-          --preview 'printf "%s\n" {3..}' \
+          --preview 'printf "%s\n" {4..}' \
           --preview-window=wrap |
         cut -f2
     }
@@ -88,7 +90,6 @@
     for keymap in emacs viins vicmd; do
       bindkey -M "$keymap" '^[a' fzf-shell-command-widget
       bindkey -M "$keymap" '^[A' fzf-shell-command-widget
-      bindkey -M "$keymap" '^O' fzf-shell-command-widget
     done
 
     # navi: interactive cheatsheet (Ctrl+G)

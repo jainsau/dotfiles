@@ -32,6 +32,12 @@ in {
     myip = "curl -s https://httpbin.org/ip | jq -r .origin";
   };
 
+  programs.zsh.initContent = ''
+    typeset -gA shell_command_descriptions
+    shell_command_descriptions[serve]="Serve current directory over HTTP"
+    shell_command_descriptions[myip]="Show public IP address"
+  '';
+
   fonts.fontconfig.enable = true;
 
   # Linux-only services

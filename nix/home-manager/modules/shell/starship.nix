@@ -6,7 +6,7 @@
     enableZshIntegration = true;
     settings = {
       format = ''
-        $os$username$hostname$directory$git_branch$git_status$character'';
+        $os$username$hostname$directory$git_branch$git_status$status$character'';
 
       add_newline = false;
 
@@ -34,6 +34,11 @@
         disabled = false;
         trim_at = ".";
         style = "dimmed white";
+      };
+
+      status = {
+        disabled = false;
+        format = " [✘ $status](red)";
       };
     };
   };

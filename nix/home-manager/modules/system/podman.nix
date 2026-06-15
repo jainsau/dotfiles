@@ -9,9 +9,12 @@ with lib;
     ];
 
     home.shellAliases = {
-      pod = "podman";
-      docker = "podman";
-      docker-compose = "podman compose";
+      p = "podman";
     };
+
+    programs.zsh.initContent = ''
+      typeset -gA shell_command_descriptions
+      shell_command_descriptions[p]="Podman"
+    '';
   };
 }

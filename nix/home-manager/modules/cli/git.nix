@@ -61,6 +61,21 @@ with lib;
       lg = "lazygit";
     };
 
+    programs.zsh.initContent = ''
+      typeset -gA shell_command_descriptions
+      shell_command_descriptions[g]="Git"
+      shell_command_descriptions[ga]="Stage files"
+      shell_command_descriptions[gc]="Commit with message"
+      shell_command_descriptions[gs]="Show worktree status"
+      shell_command_descriptions[gl]="Compact decorated log graph"
+      shell_command_descriptions[gd]="Show unstaged diff"
+      shell_command_descriptions[gco]="Checkout branch or path"
+      shell_command_descriptions[gb]="List or manage branches"
+      shell_command_descriptions[gp]="Push current branch"
+      shell_command_descriptions[gpl]="Pull current branch"
+      shell_command_descriptions[lg]="Open lazygit"
+    '';
+
     programs.delta = {
       enable = true;
       options = {

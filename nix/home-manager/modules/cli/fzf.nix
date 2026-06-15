@@ -37,6 +37,14 @@
 
   programs.zsh.initContent = ''
     # fzf-powered helpers
+    typeset -gA shell_command_descriptions
+    shell_command_descriptions[fe]="Open selected file in editor"
+    shell_command_descriptions[frg]="Search file contents and open match"
+    shell_command_descriptions[fcd]="cd into selected directory"
+    shell_command_descriptions[fgl]="Browse git log and checkout commit"
+    shell_command_descriptions[fbr]="Switch git branch interactively"
+    shell_command_descriptions[fkill]="Select processes to kill"
+    shell_command_descriptions[fenv]="Browse environment variables"
 
     # Interactive git log browser → checkout
     fgl() {

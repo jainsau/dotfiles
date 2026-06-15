@@ -172,6 +172,7 @@ The shell uses **vi mode** with these custom bindings:
 
 | Key | Action |
 |-----|--------|
+| `Alt+A` | Pick an alias/function with descriptions and insert it into the prompt |
 | `Ctrl+S` | Prepend `sudo` to current command (or recall last command with sudo) |
 | `Ctrl+X Ctrl+E` | Edit current command in `$EDITOR` |
 | `v` (normal mode) | Edit current command in `$EDITOR` |
