@@ -11,7 +11,9 @@ opt.softtabstop = 2            -- Number of spaces for a tab key press
 opt.tabstop = 2                -- Display width of a tab character
 opt.shiftwidth = 2             -- Number of spaces for each level of indentation
 
-opt.wrap = false               -- Do not wrap lines
+opt.wrap = true                -- Visually wrap long lines
+opt.linebreak = true           -- Wrap at word boundaries
+opt.breakindent = true         -- Preserve indentation on wrapped lines
 opt.sidescroll = 5             -- Sensible horizontal scroll
 opt.scrolloff = 10             -- Minimum visible lines above and below the cursor
 
