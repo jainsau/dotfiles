@@ -36,5 +36,23 @@ in {
       force = true;
     };
 
+    # Seed rhubarb-pi's compact-config extension with an empty threshold map so
+    # first-time installs do not log a missing-config error before the user opens
+    # /compact-config. Use activation instead of home.file so the extension can
+    # mutate the JSON normally after bootstrap.
+    home.activation.seedPiCompactConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      config_dir="$HOME/.pi/agent"
+      mkdir -p "$config_dir"
+
+      if [ ! -e "$config_dir/compact-config.json" ]; then
+        printf '%s\n' '{"thresholds":{}}' > "$config_dir/compact-config.json"
+      fi
+
+      # Compatibility for the historically mistyped filename seen in setup notes.
+      if [ ! -e "$config_dir/compacti-config.json" ]; then
+        printf '%s\n' '{"thresholds":{}}' > "$config_dir/compacti-config.json"
+      fi
+    '';
+
   };
 }
