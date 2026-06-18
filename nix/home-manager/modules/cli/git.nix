@@ -28,6 +28,7 @@ with lib;
         diff.tool = "nvimdiff";
         merge.tool = "nvimdiff";
         difftool.prompt = false;
+        init.defaultBranch = "main";
         user = {
           name = gitUser;
           email = gitEmail;
