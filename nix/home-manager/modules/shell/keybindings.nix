@@ -94,23 +94,38 @@
 
     # Job picker (Alt+J): list current shell jobs and resume the selected one
     _fzf_job_select() {
-      jobs -l | fzf --ansi --no-sort --header='Select job to resume' --preview 'printf "%s\n" {}'
+      emulate -L zsh
+      typeset -g FZF_JOB_SELECTED
+      local jobs_file
+      FZF_JOB_SELECTED=
+      jobs_file="$(mktemp "''${TMPDIR:-/tmp}/fzf-jobs.XXXXXX")" || return 1
+      jobs -l >| "$jobs_file"
+      if [[ ! -s "$jobs_file" ]]; then
+        rm -f "$jobs_file"
+        return 1
+      fi
+      FZF_JOB_SELECTED="$(fzf --ansi --no-sort --header='Select job to resume' --preview 'printf "%s\n" {}' < "$jobs_file")"
+      rm -f "$jobs_file"
+      [[ -n "$FZF_JOB_SELECTED" ]]
     }
 
     shell_command_descriptions[fjobs]="Pick and resume a shell job"
 
-    # Callable fallback for testing/discovery: prints the selected jobs(1) line.
     fjobs() {
-      _fzf_job_select
+      emulate -L zsh
+      local job_id
+      _fzf_job_select || return
+      job_id="''${FZF_JOB_SELECTED%%]*}"
+      job_id="''${job_id#\[}"
+      [[ -n "$job_id" ]] && fg "%$job_id"
     }
 
     fzf-resume-job-widget() {
       emulate -L zsh
-      local selected job_id
-      selected="$(_fzf_job_select)"
-      if [[ -n "$selected" ]]; then
-        job_id="''${selected%%]*}"
-        job_id="''${job_id#[}"
+      local job_id
+      if _fzf_job_select; then
+        job_id="''${FZF_JOB_SELECTED%%]*}"
+        job_id="''${job_id#\[}"
         if [[ -n "$job_id" ]]; then
           BUFFER="fg %$job_id"
           zle accept-line

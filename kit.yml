@@ -31,6 +31,9 @@ packages:
   caveman:
     source: git:github.com/JuliusBrussee/caveman
     rating: useful
+  ponytail:
+    source: git:github.com/DietrichGebert/ponytail
+    rating: useful
   pi-model-router:
     source: npm:@kylebrodeur/pi-model-router
     rating: core
