@@ -63,7 +63,7 @@
         done
 
         local fn
-        for fn in fe frg fcd fgl fbr fkill fenv; do
+        for fn in fe frg fcd fgl fbr fkill fenv fjobs; do
           (( $+functions[$fn] )) && printf 'function\t%s\t%s\t%s\n' "$fn" "''${shell_command_descriptions[$fn]-}" "$(whence -f "$fn" | sed -n '1p')"
         done
       } |
@@ -90,6 +90,39 @@
     for keymap in emacs viins vicmd; do
       bindkey -M "$keymap" '^[a' fzf-shell-command-widget
       bindkey -M "$keymap" '^[A' fzf-shell-command-widget
+    done
+
+    # Job picker (Alt+J): list current shell jobs and resume the selected one
+    _fzf_job_select() {
+      jobs -l | fzf --ansi --no-sort --header='Select job to resume' --preview 'printf "%s\n" {}'
+    }
+
+    shell_command_descriptions[fjobs]="Pick and resume a shell job"
+
+    # Callable fallback for testing/discovery: prints the selected jobs(1) line.
+    fjobs() {
+      _fzf_job_select
+    }
+
+    fzf-resume-job-widget() {
+      emulate -L zsh
+      local selected job_id
+      selected="$(_fzf_job_select)"
+      if [[ -n "$selected" ]]; then
+        job_id="''${selected%%]*}"
+        job_id="''${job_id#[}"
+        if [[ -n "$job_id" ]]; then
+          BUFFER="fg %$job_id"
+          zle accept-line
+          return
+        fi
+      fi
+      zle reset-prompt
+    }
+    zle -N fzf-resume-job-widget
+    for keymap in emacs viins vicmd; do
+      bindkey -M "$keymap" '^[j' fzf-resume-job-widget
+      bindkey -M "$keymap" '^[J' fzf-resume-job-widget
     done
 
     # navi: interactive cheatsheet (Ctrl+G)

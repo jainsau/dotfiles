@@ -49,6 +49,9 @@ packages:
   pi-hooks:
     source: npm:pi-hooks
     rating: useful
+  pi-provider-kiro:
+    source: npm:pi-provider-kiro
+    rating: useful
   rhubarb-pi:
     source: git:github.com/qualisero/rhubarb-pi
     rating: debatable
