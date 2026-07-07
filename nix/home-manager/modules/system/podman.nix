@@ -4,9 +4,10 @@
 with lib;
 {
   config = mkIf config.tools.enableMonitoring {
-    home.packages = with pkgs; [
+    home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux (with pkgs; [
       podman
-    ];
+      podman-compose
+    ]);
 
     home.shellAliases = {
       p = "podman";

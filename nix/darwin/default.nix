@@ -51,13 +51,15 @@
     brews = [
       "lima"
       "colima"
-      "archon"
+      "podman"
+      "podman-compose"
+      # "archon"
     ] ++ lib.optionals pkgs.stdenv.hostPlatform.isAarch64 [
       # Apple's Container CLI is Apple Silicon-only.
       "container"
     ];
-    taps = [
-      "coleam00/archon"
-    ];
+    # taps = [
+    #   "coleam00/archon"
+    # ];
   };
 }

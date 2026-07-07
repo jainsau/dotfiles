@@ -1,0 +1,17 @@
+{
+  "name": "pi-extensions",
+  "private": true,
+  "dependencies": {
+    "@0xkobold/pi-mcp": "^0.4.0",
+    "@aliou/pi-guardrails": "^0.14.1",
+    "@gotgenes/pi-github-tools": "^4.1.5",
+    "@kylebrodeur/pi-model-router": "^0.2.2",
+    "pi-depo": "^0.1.44",
+    "pi-github": "^0.2.0",
+    "pi-hooks": "^1.0.5",
+    "pi-lean-ctx": "^3.8.13",
+    "pi-provider-kiro": "^0.8.0",
+    "pi-subagents": "^0.31.0",
+    "pi-web-access": "^0.13.0"
+  }
+}
