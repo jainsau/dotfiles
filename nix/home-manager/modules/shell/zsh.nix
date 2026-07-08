@@ -44,6 +44,11 @@
       # Source local runtime secrets. This file is intentionally not managed by Nix.
       [[ -f ''${XDG_CONFIG_HOME}/.secrets.env ]] && source ''${XDG_CONFIG_HOME}/.secrets.env
 
+      # Rewrite navacloud GitHub URLs to use token auth (requires GITHUB_TOKEN in secrets.env)
+      if [[ -n "$GITHUB_TOKEN" ]]; then
+        git config --global url."https://''${GITHUB_TOKEN}@github.com/navacloud/".insteadOf "https://github.com/navacloud/"
+      fi
+
       # Kiro CLI post block. Keep at the bottom of this file.
       if [[ -f "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]]; then
         builtin source "$HOME/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
