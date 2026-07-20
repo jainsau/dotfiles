@@ -38,6 +38,7 @@ in {
       kiro-cli
       gemini-cli
       claude-code
+      codex
       pi-coding-agent
       openspec
       uv
