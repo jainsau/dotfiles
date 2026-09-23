@@ -25,6 +25,7 @@ with lib;
     programs.git = {
       enable = true;
       settings = {
+        include.path = "~/.config/git/config.local";
         diff.tool = "nvimdiff";
         merge.tool = "nvimdiff";
         difftool.prompt = false;

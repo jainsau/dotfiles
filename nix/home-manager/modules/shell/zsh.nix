@@ -44,9 +44,10 @@
       # Source local runtime secrets. This file is intentionally not managed by Nix.
       [[ -f ''${XDG_CONFIG_HOME}/.secrets.env ]] && source ''${XDG_CONFIG_HOME}/.secrets.env
 
-      # Rewrite navacloud GitHub URLs to use token auth (requires GITHUB_TOKEN in secrets.env)
+      # Write token-based git URL rewrites to a mutable include file
+      # (global git config is read-only, managed by Home Manager)
       if [[ -n "$GITHUB_TOKEN" ]]; then
-        git config --global url."https://''${GITHUB_TOKEN}@github.com/navacloud/".insteadOf "https://github.com/navacloud/"
+        printf '[url "https://%s@github.com/navacloud/"]\n\tinsteadOf = https://github.com/navacloud/\n' "$GITHUB_TOKEN" > "''${XDG_CONFIG_HOME}/git/config.local"
       fi
 
       # Kiro CLI post block. Keep at the bottom of this file.
