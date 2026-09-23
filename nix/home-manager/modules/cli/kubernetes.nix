@@ -7,6 +7,7 @@ with lib;
     home.packages = with pkgs; [
       kubectl
       k9s
+      kubernetes-helm
     ];
 
     programs.zsh.initContent = ''
@@ -15,6 +16,11 @@ with lib;
         source <(kubectl completion zsh)
         alias k=kubectl
         compdef k=kubectl
+      fi
+
+      # helm shell completion
+      if command -v helm &>/dev/null; then
+        source <(helm completion zsh)
       fi
     '';
   };

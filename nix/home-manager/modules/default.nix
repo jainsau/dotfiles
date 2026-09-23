@@ -3,7 +3,7 @@
 with lib;
 {
   options.tools = {
-    enableKubernetes = mkEnableOption "Kubernetes tools (kubectl, k9s)";
+    enableKubernetes = mkEnableOption "Kubernetes tools (kubectl, k9s, helm)";
     enableNetworkTools = mkEnableOption "Network diagnostic tools (nmap, mtr, trippy, etc.)";
     enableMonitoring = mkEnableOption "System monitoring tools (lsof, ncdu, podman)";
     enableTmux = mkEnableOption "Tmux terminal multiplexer";
